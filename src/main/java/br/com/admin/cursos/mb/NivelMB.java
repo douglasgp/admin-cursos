@@ -12,8 +12,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import com.github.adminfaces.showcase.jdbc.ConnectionFactory;
-import com.github.adminfaces.showcase.model.CategoriaUsuario;
-import com.github.adminfaces.showcase.model.Nivel;
+
+import br.com.admin.cursos.model.CategoriaUsuario;
+import br.com.admin.cursos.model.Nivel;
 
 @ManagedBean
 @SessionScoped

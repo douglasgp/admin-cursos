@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.dao;
+package br.com.admin.cursos.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.adminfaces.showcase.jdbc.FabricaConexao;
-import com.github.adminfaces.showcase.model.CategoriaUsuario;
+
+import br.com.admin.cursos.model.CategoriaUsuario;
 
 public class CategoriaUsuarioDAO {
 	

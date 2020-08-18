@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.test;
+package br.com.admin.cursos.testes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.github.adminfaces.showcase.model.CategoriaUsuario;
+import br.com.admin.cursos.model.CategoriaUsuario;
 
 @ManagedBean
 @SessionScoped

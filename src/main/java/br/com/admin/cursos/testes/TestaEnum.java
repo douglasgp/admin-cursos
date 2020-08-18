@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.test;
+package br.com.admin.cursos.testes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Random;
 
 import javax.faces.model.SelectItem;
 
-import com.github.adminfaces.showcase.model.CATEGORIAUSUARIO;
+import br.com.admin.cursos.constantes.CATEGORIAUSUARIO;
 
 public class TestaEnum {
 

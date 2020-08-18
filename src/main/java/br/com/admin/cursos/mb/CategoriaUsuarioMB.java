@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.model;
+package br.com.admin.cursos.mb;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -12,9 +12,11 @@ import javax.faces.bean.SessionScoped;
 
 import org.omnifaces.util.Messages;
 
-import com.github.adminfaces.showcase.dao.CategoriaUsuarioDAO;
 import com.github.adminfaces.showcase.jdbc.ConnectionFactory;
 import com.github.adminfaces.showcase.jdbc.FabricaConexao;
+
+import br.com.admin.cursos.dao.CategoriaUsuarioDAO;
+import br.com.admin.cursos.model.CategoriaUsuario;
 
 @ManagedBean
 @SessionScoped
@@ -110,9 +112,9 @@ public class CategoriaUsuarioMB implements Serializable {
 	public void adicionaCategoria() {
 		cuDAO.salvarCatUsuDAO(this.categUsu);
 		if(this.categUsu.getCodigoCat() != null) {
-			Messages.create("SUCESSO!").detail("Usuário " + this.categUsu.getNomeCat() + " REGISTRADO com sucesso!").add();
+			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " alterado com sucesso!").add();
 		} else {
-			Messages.create("SUCESSO!").detail("Usuário " + this.categUsu.getNomeCat() + " ALTERADO com sucesso!").add();			
+			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " registrado com sucesso!").add();		
 		}
 		this.categUsu = new CategoriaUsuario();
 	}

@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.model;
+package br.com.admin.cursos.model;
 
 public class CategoriaUsuario {
 
