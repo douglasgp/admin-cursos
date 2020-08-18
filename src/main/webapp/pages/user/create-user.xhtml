@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="#{layoutMB.template}" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="title">
+        Add User
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Add User" />
+
+		<h:form>
+			<p:panelGrid
+				columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+				columns="4" layout="grid" styleClass="ui-fluid card">
+				<p:outputLabel for="name" value="Nome" />
+				<p:inputText value="#{userMB.user.firstname}" type="text" id="name" validatorMessage="Informe um nome"/>
+
+				<p:outputLabel for="email" value="E-mail" />
+				<p:inputText value="#{userMB.user.email}" type="email" id="email" placeholder="pessoa@email.com" validatorMessage="Informe um e-mail"/>
+
+				<p:outputLabel for="endereco" value="Endereço" />
+				<p:inputTextarea value="#{userMB.user.address}" id="endereco" validatorMessage="Informe um endereço"/>
+
+				<p:outputLabel for="nascimento" value="Data Nascimento" />
+				<p:calendar value="#{userMB.user.age}" id="nascimento" showOn="button" validatorMessage="Informe uma data"/>
+
+				<p:outputLabel for="categoriaUsuario" value="Categoria" />
+				<p:selectOneMenu id="categoriaUsuario" value="#{userMB.user.catUsu}"
+					required="true">
+					<f:selectItem itemLabel="Escolha ..." itemValue=""/>
+					<f:selectItems value="#{userMB.listaCat}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Categoria: #{userMB.listaCat.size()}" />
+				
+			</p:panelGrid>
+			<p:spacer height="10" />
+
+			<!-- Botões -->
+			<div id="main-buttons" class="hidden-sm hidden-xs">
+				<p:commandButton value="Save" action="#{userMB.salvaUsuario(userMB)}"
+					icon="fa fa-check" styleClass="btn-primary" />
+				<p:spacer width="5" />
+
+				<p:commandButton value="Clear" action="#{samplePageMB.clear}"
+					icon="fa fa-refresh" styleClass="btn-success"
+					rendered="#{samplePageMB.isNew()}" resetValues="true" />
+				<p:spacer width="5" rendered="#{not samplePageMB.isNew()}" />
+
+				<p:commandButton value="Delete" action="#{samplePageMB.remove}"
+					rendered="#{not samplePageMB.isNew()}" icon="fa fa-trash"
+					styleClass="btn-danger">
+					<f:setPropertyActionListener value="true"
+						target="#{facesContext.externalContext.flash.keepMessages}" />
+					<p:confirm header="Confirmation" message="Are you sure?"
+						icon="ui-icon-danger" />
+				</p:commandButton>
+				<p:spacer width="5" />
+
+				<p:commandButton value="Back" immediate="true"
+					styleClass="btn-default" action="/index?faces-redirect=true"
+					icon="fa fa-reply" />
+			</div>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

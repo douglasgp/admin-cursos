@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="#{layoutMB.template}" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="title">
+        Dashboard FATEC
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="FATEC" />
+
+		<h:form>
+			<center>
+				<h2>
+					<h:outputText value="Lista de Usuários" />
+				</h2>
+			</center>
+			<h:commandButton style="line-height: inherit" action="create-user.xhtml?faces-redirect=true"
+				value="Novo Usuário" class="btn btn-success"></h:commandButton>
+
+			<h:dataTable value="#{userMB.users}" var="u"
+				class="table table-striped table-hover table-bordered">
+				<h:column>
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{u.id}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">User Name</f:facet>
+					<h:outputText value="#{u.firstname}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Email ID</f:facet>
+					<h:outputText value="#{u.email}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Address</f:facet>
+					<h:outputText value="#{u.address}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Update</f:facet>
+					<h:commandButton value="Update" class="btn btn-primary">
+					</h:commandButton>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Delete</f:facet>
+					<h:commandButton value="Delete" class="btn btn-danger">
+					</h:commandButton>
+				</h:column>
+			</h:dataTable>
+		</h:form>
+
+		<p:commandButton id="dialog" value="Dialog" icon="ui-icon-extlink"
+			styleClass="btn-success" type="button" onclick="PF('dlg').show()"
+			style="margin-top:20px;display:block" />
+		<p:dialog header="Login" widgetVar="dlg" resizable="false"
+			responsive="true" modal="true" appendTo="@(body)" width="350"
+			styleClass="card #{panelMB.solid ? 'box-primary box-solid':''}">
+			<p:panelGrid columns="2" layout="grid"
+				styleClass="ui-panelgrid-blank"
+				columnClasses="ui-grid-col-4,ui-grid-col-8">
+				<p:outputLabel for="firstname" value="Nome:" />
+				<p:inputText id="firstname" />
+
+				<p:outputLabel for="lastname" value="Sobrenome:" />
+				<p:inputText id="lastname" />
+
+				<p:outputLabel for="password" value="Password:" />
+				<p:password id="password" />
+				<p:outputLabel for="date" value="Date:" />
+				<p:calendar id="date" showOn="button" />
+				<p:outputLabel value="Solid? " />
+				<p:inputSwitch value="#{panelMB.solid}">
+					<p:ajax process="@this" global="false" update="@(.ui-dialog)"
+						oncomplete="PF('dlg').show()" />
+				</p:inputSwitch>
+				<f:facet name="footer">
+					<div class="box-footer">
+						<p:commandButton value="Login" type="button"
+							onclick="PF('dlg').hide()" styleClass="btn-primary" />
+					</div>
+				</f:facet>
+			</p:panelGrid>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

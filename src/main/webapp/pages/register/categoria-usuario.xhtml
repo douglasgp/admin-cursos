@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="#{layoutMB.template}">
+
+	<ui:define name="title">
+        Gestão de Cadastros
+    </ui:define>
+	<ui:define name="description">
+        Gerenciamento de cadastros padrão
+    </ui:define>
+	<ui:define name="body">
+		<ui:param name="renderFormAsterisks" value="true" />
+		<adm:breadcrumb title="Getão Cad." />
+
+		<div class="ui-g-12">
+			<p:panel header="Accordion Panel" styleClass="card no-border">
+				<p:accordionPanel>
+					
+					<!-- NOVA TAB gerenciamento de categorias de usuário -->
+					<p:tab title="Categoria de Usuario (NEW)">
+						<h:form id="newTableCategoria">
+							<p:growl showDetail="true" life="2000" severity="info">
+								<p:autoUpdate/>
+							</p:growl>
+							<p:growl showDetail="true" life="2000" severity="warn">
+								<p:autoUpdate/>
+							</p:growl>
+							<!-- Formulário cadastro / edita categorias -->
+							<p:fieldset legend="Cadastro de categoria">
+								<p:panelGrid columns="4" layout="grid"
+									styleClass="ui-fluid card"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+									<h:outputLabel for="categNome" value="Nome: " />
+									<p:inputText id="categNome"
+										value="#{categoriaUsuarioMB.categUsu.nomeCat}" />
+
+									<p:outputLabel for="categDesc" value="Descrição: " />
+									<p:inputTextarea id="categDesc"
+										value="#{categoriaUsuarioMB.categUsu.descricaoCat}" />
+									<p:spacer height="10px" />
+								</p:panelGrid>
+								<h:panelGroup>
+									<p:commandButton class="btn btn-success" update="@form"
+										action="#{categoriaUsuarioMB.adicionaCategoria()}"
+										value="Salvar"/>
+									<p:commandButton action="#{categoriaUsuarioMB.listar()}"
+										update="@form" value="Atualizar" class="btn btn-teal" />
+								</h:panelGroup>
+							</p:fieldset>
+
+							<!-- Tabela lista de categorias -->
+							<p:fieldset legend="Lista de Categorias">
+								<p:dataTable value="#{categoriaUsuarioMB.listaCategorias}"
+									id="tdCatUsu" var="u"
+									class="table table-striped table-hover table-bordered">
+									<p:column headerText="ID">
+										<h:outputText value="#{u.codigoCat}" />
+									</p:column>
+									<p:column headerText="Nome" sortBy="#{u.nomeCat}">
+										<h:outputText value="#{u.nomeCat}" />
+									</p:column>
+									<p:column headerText="Descrição" sortBy="#{u.descricaoCat}">
+										<h:outputText value="#{u.descricaoCat}" />
+									</p:column>
+									<p:column headerText="AÇÃO">
+										<p:commandButton value="Editar" update="@form"
+											action="#{categoriaUsuarioMB.edita(u)}" />
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+						</h:form>
+					</p:tab>
+
+
+					<p:tab title="Classificação do Curso (NÍVEL)">
+						<h:dataTable value="#{nivelMB.niveis}" var="u"
+							class="table table-striped table-hover table-bordered">
+							<h:column>
+								<f:facet name="header">ID</f:facet>
+								<h:outputText value="#{u.codNivel}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Name</f:facet>
+								<h:outputText value="#{u.nomeNivel}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Descricao</f:facet>
+								<h:outputText value="#{u.descNivel}" />
+							</h:column>
+						</h:dataTable>
+					</p:tab>
+
+					<p:tab title="Testes JSF">
+						<h:form id="formCategoria">
+
+							<p:toolbar>
+								<p:toolbarGroup>
+									<p:commandButton value="Adicionar" class="btn btn-success"
+										action="#{testaMB.adicionaLista()}" update="@form" />
+								</p:toolbarGroup>
+							</p:toolbar>
+
+							<p:fieldset legend="Objetos">
+								<p:panelGrid columns="2">
+									<h:outputLabel for="categNome" value="Nome: " />
+									<p:inputText id="categNome" value="#{testaMB.categUsu.nomeCat}" />
+
+									<p:outputLabel for="categDesc" value="Descrição: " />
+									<p:inputText id="categDesc"
+										value="#{testaMB.categUsu.descricaoCat}" />
+								</p:panelGrid>
+
+								<p:dataTable id="tbCateg" value="#{testaMB.listaCategorias}"
+									var="u">
+									<p:column headerText="Nome" sortBy="#{u.nomeCat}">
+										<p:outputLabel value="#{u.nomeCat}" />
+									</p:column>
+
+									<p:column headerText="Descrição" sortBy="#{u.descricaoCat}">
+										<p:outputLabel value="#{u.descricaoCat}" />
+										
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+
+						</h:form>
+					</p:tab>
+
+				</p:accordionPanel>
+			</p:panel>
+		</div>
+	</ui:define>
+
+</ui:composition>

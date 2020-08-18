@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	teste corpo
+	<composite:interface>
+	teste composite interface
+</composite:interface>
+	<composite:implementation>
+		<h:form>
+
+			<h:panelGrid id="grid">
+				<f:facet name="header">
+					<p:messages id="msgs" />
+				</f:facet>
+				<p:column>
+					<p:dataTable value="#{categoriaUsuarioMB.catUsu}" var="u"
+						class="table table-striped table-hover table-bordered">
+						<p:column>
+							<f:facet name="header">ID</f:facet>
+							<h:outputText value="#{u.codigoCat}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Name</f:facet>
+							<h:outputText id="catName" value="#{u.nomeCat}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Descricao</f:facet>
+							<h:outputText id="catDesc" value="#{u.descricaoCat}" />
+						</p:column>
+					</p:dataTable>
+				</p:column>
+
+				<h:column>
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Nome categoria:" />
+						<p:inputText value="#{categoriaUsuarioMB.categoriaUsu.nomeCat}" />
+
+						<p:outputLabel value="Descrição: " />
+						<p:inputTextarea
+							value="#{categoriaUsuarioMB.categoriaUsu.descricaoCat}" />
+					</h:panelGrid>
+
+					<p:commandButton action="#{categoriaUsuarioMB.testaCategoria(categoriaUsu)}"
+						value="Nova categoria"/>
+				</h:column>
+			</h:panelGrid>
+			
+			<p:outputLabel value="Lista: "/>
+			<p:outputLabel value="#{categoriaUsuarioMB.listaCategorias.size()}"/>
+
+		</h:form>
+
+
+
+	</composite:implementation>
+</body>
+</html>
