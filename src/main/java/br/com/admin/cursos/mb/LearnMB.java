@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.bean;
+package br.com.admin.cursos.mb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
