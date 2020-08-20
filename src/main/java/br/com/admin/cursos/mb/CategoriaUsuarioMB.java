@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import org.omnifaces.util.Messages;
@@ -27,11 +28,13 @@ public class CategoriaUsuarioMB implements Serializable {
 	private List<CategoriaUsuario> listaCategorias;
 	private CategoriaUsuarioDAO cuDAO = new CategoriaUsuarioDAO();
 	private Boolean novaCategoria;
+	private boolean editaCateg;
 
 	@PostConstruct
 	public void init() {
 		this.categUsu = new CategoriaUsuario();
 		this.listaCategorias = new ArrayList<CategoriaUsuario>();
+		this.setEditaCateg(false);
 		listar();
 	}
 
@@ -54,34 +57,27 @@ public class CategoriaUsuarioMB implements Serializable {
 	 * return listaCat; }
 	 */
 
-	public String salvaCatUsu(CategoriaUsuario catUsu) {
-		System.out.println("Tentando salvar");
-		int result = 0;
-
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = ConnectionFactory.getConCursos();
-
-			PreparedStatement stmt = con
-					.prepareStatement("INSERT INTO categoria_usuario(nome_cat_usu, desc_cat_usu) VALUES(?,?)");
-			stmt.setString(1, catUsu.getNomeCat());
-			stmt.setString(2, catUsu.getDescricaoCat());
-
-			result = stmt.executeUpdate();
-			con.close();
-
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		if (result != 0) {
-			System.out.println("Registrado com sucesso!");
-			return "user.xhtml?faces-redirect=true";
-		} else {
-			System.out.println("Falha ao registrar!");
-			return "create-user.xhtml?faces-redirect=true";
-		}
-	}
-
+	/*
+	 * public String salvaCatUsu(CategoriaUsuario catUsu) {
+	 * System.out.println("Tentando salvar"); int result = 0;
+	 * 
+	 * try { Class.forName("com.mysql.cj.jdbc.Driver"); Connection con =
+	 * ConnectionFactory.getConCursos();
+	 * 
+	 * PreparedStatement stmt = con
+	 * .prepareStatement("INSERT INTO categoria_usuario(nome_cat_usu, desc_cat_usu) VALUES(?,?)"
+	 * ); stmt.setString(1, catUsu.getNomeCat()); stmt.setString(2,
+	 * catUsu.getDescricaoCat());
+	 * 
+	 * result = stmt.executeUpdate(); con.close();
+	 * 
+	 * } catch (Exception e) { System.out.println(e); } if (result != 0) {
+	 * System.out.println("Registrado com sucesso!"); return
+	 * "user.xhtml?faces-redirect=true"; } else {
+	 * System.out.println("Falha ao registrar!"); return
+	 * "create-user.xhtml?faces-redirect=true"; } }
+	 */
+	
 	public void listar() {
 		this.listaCategorias = cuDAO.listaCategoriaUsu();
 		this.categUsu = new CategoriaUsuario();
@@ -89,17 +85,39 @@ public class CategoriaUsuarioMB implements Serializable {
 
 	public void edita(CategoriaUsuario catUsu) {
 		this.categUsu = catUsu;
-		System.out.println("Editar: " + this.categUsu);
+		System.out.println("Editar: " + this.categUsu.toString());
 	}
 
-	public void excluir(Integer codCategoria) {
-		for (int i = 0; i < this.listaCategorias.size(); i++) {
-			CategoriaUsuario catUsu = this.listaCategorias.get(i);
-			if (catUsu.getCodigoCat().equals(codCategoria)) {
-				this.listaCategorias.remove(i);
+	public void recebeCategoria(CategoriaUsuario catUsu) {
+		this.setEditaCateg(false);
+		for (CategoriaUsuario categoriaUsuario : listaCategorias) {
+			if(catUsu.equals(categoriaUsuario)) {
+				this.categUsu = catUsu;
+				System.out.println("Prepara excluir categoria: " + this.categUsu.getNomeCat());
 				break;
 			}
 		}
+	}
+	
+	public void excluir() {
+		int status = 0;
+		status = cuDAO.removeCategoria(this.categUsu.getCodigoCat());
+
+		/*
+		 * for (int i = 0; i < this.listaCategorias.size(); i++) { CategoriaUsuario
+		 * catUsu = this.listaCategorias.get(i); if
+		 * (catUsu.getCodigoCat().equals(codCategoria)) {
+		 * this.listaCategorias.remove(i); break; } }
+		 */
+
+		if (status != 0) {
+			Messages.create("SUCESSO!").detail("Categoria [ " + this.categUsu.getNomeCat() + " ] removida com sucesso!")
+					.add();
+		} else {
+			Messages.create("ERRO!")
+					.detail("Não foi possível remover categoria [ " + this.categUsu.getNomeCat() + " ] !").add();
+		}
+		atualizaBanco();
 	}
 
 	public void atualizaBanco() {
@@ -111,14 +129,17 @@ public class CategoriaUsuarioMB implements Serializable {
 	/* CREATE and UPDATE */
 	public void adicionaCategoria() {
 		cuDAO.salvarCatUsuDAO(this.categUsu);
-		if(this.categUsu.getCodigoCat() != null) {
-			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " alterado com sucesso!").add();
+		if (this.categUsu.getCodigoCat() != null) {
+			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " alterado com sucesso!")
+					.add();
 		} else {
-			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " registrado com sucesso!").add();		
+			Messages.create("SUCESSO!").detail("Categoria " + this.categUsu.getNomeCat() + " registrado com sucesso!")
+					.add();
 		}
 		this.categUsu = new CategoriaUsuario();
+		atualizaBanco();
 	}
-	
+
 	public void novaCategoria() {
 		this.categUsu = new CategoriaUsuario();
 	}
@@ -151,15 +172,22 @@ public class CategoriaUsuarioMB implements Serializable {
 		this.categUsu = categUsu;
 	}
 
-	
 	public Boolean getNovaCategoria() {
 		return novaCategoria;
 	}
 
-	
 	public void setNovaCategoria(Boolean novaCategoria) {
 		this.novaCategoria = novaCategoria;
 	}
 
+	public boolean isEditaCateg() {
+		return editaCateg;
+	}
+
+	public void setEditaCateg(boolean editaCateg) {
+		this.editaCateg = editaCateg;
+	}
 	
+	
+
 }

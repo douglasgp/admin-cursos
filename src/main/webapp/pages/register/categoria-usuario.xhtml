@@ -23,7 +23,7 @@
 					
 					<!-- NOVA TAB gerenciamento de categorias de usuário -->
 					<p:tab title="Categoria de Usuario (NEW)">
-						<h:form id="newTableCategoria">
+						<h:form id="formCategoria">
 							<p:growl showDetail="true" life="2000" severity="info">
 								<p:autoUpdate/>
 							</p:growl>
@@ -50,6 +50,8 @@
 										value="Salvar"/>
 									<p:commandButton action="#{categoriaUsuarioMB.listar()}"
 										update="@form" value="Atualizar" class="btn btn-teal" />
+									<p:commandButton update="@form" value="Excluir"
+										 rendered="if(#{categoriaUsuarioMB.editaCateg == false})"/>
 								</h:panelGroup>
 							</p:fieldset>
 
@@ -69,13 +71,34 @@
 									</p:column>
 									<p:column headerText="AÇÃO">
 										<p:commandButton value="Editar" update="@form"
-											action="#{categoriaUsuarioMB.edita(u)}" />
+											action="#{categoriaUsuarioMB.edita(u)}"  class="btn btn-warning" />
+										<p:commandButton value="Excluir" class="btn btn-danger"
+											onclick="PF('modalExcluiCategoria').show()"  
+											action="#{categoriaUsuarioMB.recebeCategoria(u)}" />
+
 									</p:column>
 								</p:dataTable>
 							</p:fieldset>
 						</h:form>
-					</p:tab>
+						
+						<!-- MODAL confirma excluir categoria -->
+							<p:dialog header="Confirma excluir categoria?" widgetVar="modalExcluiCategoria" responsive="false" modal="true"
+								appendTo="@(body)" width="350" styleClass="card box-danger box-solid">
+									<!-- <p:outputLabel value="Nome: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.nomeCat}" />
 
+									<p:outputLabel value="Descrição: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.descricaoCat}" />
+ -->
+									<p:commandButton value="Cancelar" class="btn btn-warning"
+										onclick="PF('modalExcluiCategoria').hide()" />
+									<p:commandButton value="Confirmar" update="formCategoria:tdCatUsu"
+										class="btn btn-danger" action="#{categoriaUsuarioMB.excluir()}"
+										onclick="PF('modalExcluiCategoria').hide()"/>
+							</p:dialog>
+							<!-- modal -->
+
+					</p:tab>
 
 					<p:tab title="Classificação do Curso (NÍVEL)">
 						<h:dataTable value="#{nivelMB.niveis}" var="u"
@@ -96,7 +119,7 @@
 					</p:tab>
 
 					<p:tab title="Testes JSF">
-						<h:form id="formCategoria">
+						<h:form id="formCategoriaJsf">
 
 							<p:toolbar>
 								<p:toolbarGroup>
@@ -134,6 +157,7 @@
 				</p:accordionPanel>
 			</p:panel>
 		</div>
+
 	</ui:define>
 
 </ui:composition>
