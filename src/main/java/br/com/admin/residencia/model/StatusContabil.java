@@ -71,4 +71,10 @@ public class StatusContabil {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "StatusContabil [codContabil=" + codContabil + ", nomeContabil=" + nomeContabil + ", descContabil="
+				+ descContabil + "]";
+	}
+
 }
