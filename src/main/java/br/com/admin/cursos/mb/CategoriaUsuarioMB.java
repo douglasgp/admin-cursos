@@ -1,19 +1,15 @@
 package br.com.admin.cursos.mb;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import org.omnifaces.util.Messages;
 
-import com.github.adminfaces.showcase.jdbc.ConnectionFactory;
 import com.github.adminfaces.showcase.jdbc.FabricaConexao;
 
 import br.com.admin.cursos.dao.CategoriaUsuarioDAO;

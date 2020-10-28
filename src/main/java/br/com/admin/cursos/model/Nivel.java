@@ -41,4 +41,9 @@ public class Nivel {
 		this.descNivel = descNivel;
 	}
 
+	@Override
+	public String toString() {
+		return "Nivel [codNivel=" + codNivel + ", nomeNivel=" + nomeNivel + ", descNivel=" + descNivel + "]";
+	}
+
 }

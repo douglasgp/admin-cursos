@@ -26,11 +26,22 @@
         <li class="header">
         	Cursos
         </li>
-        <li>
-        	<p:link>
+        <li class="treeview">
+            <a href="#">
 	        	<i class="fa fa-university"></i>
 	        	<span>FATEC</span>
-        	</p:link>
+	        	<span class="pull-right-container">
+					<i class="fa fa-angle-left pull-right"></i>
+				</span>
+			</a>
+			            <ul class="treeview-menu">
+                <li>
+                    <p:link outcome="/pages/fatec/disciplinas/ilp007.xhtml" title="Logon page">
+                        <i class="fa fa-users"></i>
+                        <span>ILP007</span>
+                    </p:link>
+                </li>
+            </ul>
         </li>
         <li>
         	<p:link>
@@ -55,13 +66,41 @@
             </a>
             <ul class="treeview-menu">
                 <li>
-                    <p:link outcome="/pages/register/categoria-usuario" title="Logon page">
+                    <p:link outcome="/pages/register/categoria-usuario" title="Cadastros categoria">
                         <i class="fa fa-users"></i>
-                        <span>Cursos</span>
+                        <span>Categorias</span>
                     </p:link>
                 </li>
             </ul>
-        </li>   
+        </li>
+        
+        <li class="header">
+        	Residencia
+        </li>
+        <li class="treeview">
+        	<a href="#">
+        		<i class="fa fa-calculator"></i>
+        		<span>Financeiro</span>
+        		<span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+        		</span>
+        	</a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link outcome="/pages/residencia/financeiro.xhtml" title="Dashboard Despesa">
+                        <i class="fa fa-money"></i>
+                        <span>Dashboard</span>
+                    </p:link>
+                </li>
+
+				<li>
+					<p:link outcome="/pages/residencia/formulario-despesa.xhtml" title="Cadastros Despesa">
+						<i class="fa fa-money"></i>
+						<span>Cadastros</span>
+					</p:link>
+				</li>
+			</ul>
+		</li>
         
         <li class="header">
             General

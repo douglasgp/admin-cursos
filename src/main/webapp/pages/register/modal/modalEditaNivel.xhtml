@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces">
+
+	<p:dialog header="Gerenciamento de Nível" id="modalEditaNivel"
+		widgetVar="modalEditaNivel" responsive="false" modal="true"
+		styleClass="card box-tea box-solid" appendTo="@(body)">
+		<h:panelGrid columns="2" id="gridEditaNivel">
+			<p:outputLabel value="Nome: " />
+			<p:inputText value="#{nivelMB.nivelEdita.nomeNivel}" />
+			<p:outputLabel value="Descrição: " />
+			<p:inputTextarea value="#{nivelMB.nivelEdita.descNivel}" />
+			<p:spacer height="10px" />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Cancelar" class="btn btn-warning"
+					onclick="PF('modalEditaNivel').hide()" />
+				<p:commandButton value="Confirmar" class="btn btn-danger"
+					onclick="PF('modalEditaNivel').hide()" type="button"
+					action="#{nivelMB.salvaNivel()}"/>
+			</h:panelGrid>
+		</h:panelGrid>
+	</p:dialog>
+</ui:composition>
