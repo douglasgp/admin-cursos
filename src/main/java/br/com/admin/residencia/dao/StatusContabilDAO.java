@@ -77,12 +77,12 @@ public class StatusContabilDAO {
 		}
 	}
 
-	public int removeStatusContabilDAO(Integer codCat) {
+	public int removeStatusContabilDAO(Integer codStatus) {
 		int status = 0;
 		try {
 			Connection con = ConectaBDResidencia.getConResidencia();
 			PreparedStatement stmt = con
-					.prepareStatement("DELETE FROM categoria_despesa WHERE id_categoria = " + codCat);
+					.prepareStatement("DELETE FROM status WHERE id_status = " + codStatus);
 			status = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

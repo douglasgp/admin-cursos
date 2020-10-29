@@ -327,7 +327,7 @@
 										</h:panelGroup>
 									</h:panelGroup>
 
-									<h:panelGroup style="width:230%">
+									<h:panelGroup style="width:230%" id="pnlListaStatus">
 										<p:dataTable id="tblStatusContabil"
 											value="#{statusContabilMB.listaStatus}" var="s"
 											paginator="true"
@@ -347,8 +347,32 @@
 												<p:menuButton value="Opções" styleClass="btn btn-teal">
 													<p:menuitem value="Editar" icon="fa fa-save" update="@form"
 														action="#{statusContabilMB.recebeStatusContabil(s)}"/>
-													<p:menuitem value="Remover" icon="fa fa-times" update="@form"/>
+													<p:menuitem value="Remover" icon="fa fa-times" update="@(div[id$=excluiStatusContabil])"
+														onclick="PF('modalExcluiStatusContabil').show()"  
+														action="#{statusContabilMB.recebeStatusContabil(s)}"/>
 												</p:menuButton>
+												<!-- MODAL confirma excluir categoria -->
+												<p:dialog header="Confirma excluir categoria?"
+													widgetVar="modalExcluiStatusContabil" responsive="false"
+													modal="true" appendTo="@(body)" width="350"
+													styleClass="card box-danger box-solid">
+													<p:panel>
+														<p:panelGrid columns="2" layout="grid" id="excluiStatusContabil">
+															<p:outputLabel>Nome Status: </p:outputLabel>
+															<p:outputLabel value="#{statusContabilMB.status.nomeContabil}"/>
+															
+															<p:outputLabel value="Descrição: "/>
+															<p:outputLabel value="#{statusContabilMB.status.descContabil}"/>
+														</p:panelGrid>
+														<p:spacer height="20px"/>
+														<p:commandButton value="Cancelar" class="btn btn-warning"
+															onclick="PF('modalExcluiStatusContabil').hide()" 
+															action="#{statusContabilMB.atualizaBanco()}"/>
+														<p:commandButton value="Confirmar" class="btn btn-danger"
+															action="#{statusContabilMB.removeStatusContabil()}"
+															onclick="PF('modalExcluiStatusContabil').hide()" update="@form" />
+													</p:panel>
+												</p:dialog>
 											</p:column>
 										</p:dataTable>
 									</h:panelGroup>
@@ -395,6 +419,9 @@
 			</p:panel>
 		</div>
 		<!-- MODAL gerencia nivel -->
+		<h:form id="frmModalStatus">
+
+		</h:form>
 
 <!-- 			<ui:include src="/pages/register/modal/modalBootsFace.xhtml" /> -->
 			
