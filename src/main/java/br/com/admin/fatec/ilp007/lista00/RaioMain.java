@@ -1,4 +1,4 @@
-package br.com.admin.fatec.ilp007;
+package br.com.admin.fatec.ilp007.lista00;
 
 import java.util.Scanner;
 
