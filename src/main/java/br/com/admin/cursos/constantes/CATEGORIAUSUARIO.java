@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.model;
+package br.com.admin.cursos.constantes;
 
 import java.util.ArrayList;
 import java.util.List;

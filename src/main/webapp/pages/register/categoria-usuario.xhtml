@@ -23,7 +23,7 @@
 					
 					<!-- NOVA TAB gerenciamento de categorias de usuário -->
 					<p:tab title="Categoria de Usuario (NEW)">
-						<h:form id="newTableCategoria">
+						<h:form id="formCategoria">
 							<p:growl showDetail="true" life="2000" severity="info">
 								<p:autoUpdate/>
 							</p:growl>
@@ -50,13 +50,15 @@
 										value="Salvar"/>
 									<p:commandButton action="#{categoriaUsuarioMB.listar()}"
 										update="@form" value="Atualizar" class="btn btn-teal" />
+									<p:commandButton update="@form" value="Excluir"
+										 rendered="if(#{categoriaUsuarioMB.editaCateg == false})"/>
 								</h:panelGroup>
 							</p:fieldset>
 
 							<!-- Tabela lista de categorias -->
 							<p:fieldset legend="Lista de Categorias">
 								<p:dataTable value="#{categoriaUsuarioMB.listaCategorias}"
-									id="tdCatUsu" var="u"
+									id="tdCatUsu" var="u" paginator="true" rows="8"
 									class="table table-striped table-hover table-bordered">
 									<p:column headerText="ID">
 										<h:outputText value="#{u.codigoCat}" />
@@ -69,51 +71,332 @@
 									</p:column>
 									<p:column headerText="AÇÃO">
 										<p:commandButton value="Editar" update="@form"
-											action="#{categoriaUsuarioMB.edita(u)}" />
+											action="#{categoriaUsuarioMB.edita(u)}"  class="btn btn-warning" />
+										<p:commandButton value="Excluir" class="btn btn-danger"
+											onclick="PF('modalExcluiCategoria').show()"  
+											action="#{categoriaUsuarioMB.recebeCategoria(u)}" />
 									</p:column>
 								</p:dataTable>
 							</p:fieldset>
 						</h:form>
+						<!-- MODAL confirma excluir categoria -->
+							<p:dialog header="Confirma excluir categoria?" widgetVar="modalExcluiCategoria" responsive="false" modal="true"
+								appendTo="@(body)" width="350" styleClass="card box-danger box-solid">
+									<!-- <p:outputLabel value="Nome: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.nomeCat}" />
+
+									<p:outputLabel value="Descrição: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.descricaoCat}" />
+ -->
+									<p:commandButton value="Cancelar" class="btn btn-warning"
+										onclick="PF('modalExcluiCategoria').hide()" />
+									<p:commandButton value="Confirmar" update="formCategoria:tdCatUsu"
+										class="btn btn-danger" action="#{categoriaUsuarioMB.excluir()}"
+										onclick="PF('modalExcluiCategoria').hide()"/>
+							</p:dialog>
+							<!-- modal -->
 					</p:tab>
-
-
+				
+					<!-- TAB cadastro de nível -->
 					<p:tab title="Classificação do Curso (NÍVEL)">
-						<h:dataTable value="#{nivelMB.niveis}" var="u"
-							class="table table-striped table-hover table-bordered">
-							<h:column>
-								<f:facet name="header">ID</f:facet>
-								<h:outputText value="#{u.codNivel}" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">Name</f:facet>
-								<h:outputText value="#{u.nomeNivel}" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">Descricao</f:facet>
-								<h:outputText value="#{u.descNivel}" />
-							</h:column>
-						</h:dataTable>
+						<h:form id="frmNivel">
+							<p:fieldset legend="Cadastro de categoria">
+							<p:panel id="fsNivel" rendered="#{nivelMB.editaNivel}" header="Modo Edição"
+								styleClass="box-primary box-solid">
+									<h:panelGrid columns="2" >
+										<p:outputLabel value="Nome: " />
+										<p:inputText value="#{nivelMB.nivelEdita.nomeNivel}" />
+										
+										<p:outputLabel value="Descrição: " />
+										<p:inputTextarea value="#{nivelMB.nivelEdita.descNivel}" />
+										
+										<p:spacer height="5px"/>
+										<p:spacer height="5px"/>
+										
+										<p:commandButton value="Cancelar" class="btn btn-warning"
+											action="#{nivelMB.cancelaEdicao()}" update="fsNivel" />
+										<p:commandButton value="Salvar" class="btn btn-primary"
+											action="#{nivelMB.salvaNivel()}" />
+									</h:panelGrid>
+								</p:panel>
+								<p:toolbar>
+									<f:facet name="left">
+										<p:commandButton value="#{nivelMB.editaNivel}" class="btn btn-primary"
+											update="frmNivel:tblNivel" action="#{nivelMB.atualizaBanco()}" />
+									</f:facet>
+									<f:facet name="right">
+										<p:commandButton value="Novo" class="btn btn-teal"
+											action="#{nivelMB.novoNivel()}" />
+									</f:facet>
+								</p:toolbar>
+								<p:dataTable id="tblNivel" value="#{nivelMB.listaNiveis}" var="u" paginator="true"
+									class="table table-striped table-hover table-bordered" rows="8">
+									<p:column headerText="ID" sortBy="#{u.codNivel}">
+										<p:outputLabel value="#{u.codNivel}" />
+									</p:column>
+									<p:column headerText="Nome" sortBy="#{u.nomeNivel}">
+										<p:outputLabel value="#{u.nomeNivel}" />
+									</p:column>
+									<p:column headerText="Descrição" sortBy="#{u.descNivel}">
+										<p:outputLabel value="#{u.descNivel}" />
+									</p:column>
+									<p:column headerText="Ação">
+										<p:commandButton value="Editar" class="btn btn-warning btn-sm" 
+											action="#{nivelMB.editaNivel(u)}" update="@form"/>											
+
+<!-- 										<p:commandButton value="Editar" class="btn btn-warning btn-sm" oncomplete="PF('modalEditaNivel').show();" update="@form" action="#{nivelMB.editaNivel(u)}" /> -->
+										<p:commandButton value="Excluir" class="btn btn-danger btn-sm"
+											onclick="PF('modalCadastraNivel').show();"
+											action="#{nivelMB.removeNivel(u)}" />
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							<ui:include src="/pages/register/modal/modalEditaNivel.xhtml" />
+							<p:dialog header="Gerenciamento de Nível" id="modalNovoNivel"
+								widgetVar="modalNovoNivel" responsive="false" modal="true"
+								styleClass="card box-tea box-solid" appendTo="@(body)">
+								<ui:include src="/pages/register/modal/modalNovoNivel.xhtml" />
+							</p:dialog>
+						</h:form>
+					</p:tab>
+					
+					<!-- TAB categoria Despesas -->
+					<p:tab title="Categoria Despesas" titleStyleClass="box-teal box-solid">
+						<h:form id="formCatDespesas">
+							<p:panel id="fsNivel" rendered="#{nivelMB.editaNivel}"
+								header="Modo Edição" styleClass="box-teal box-solid">
+								<h:panelGrid columns="4">
+									<h:panelGroup>
+										<p:outputLabel value="Nome:" />
+										<p:inputText value="#{categoriaDespesaMB.catDespesa.nome}" />
+										<p:spacer width="20px"/>
+									</h:panelGroup>
+
+									<h:panelGroup>									
+										<p:outputLabel value="Descrição: "/>
+										<p:inputText value="#{categoriaDespesaMB.catDespesa.descricao}"/>
+										<p:spacer width="20px"/>
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:outputLabel value="Sigla: "/>
+										<p:inputText value="#{categoriaDespesaMB.catDespesa.sigla}"/>
+										<p:spacer width="20px" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:commandButton value="Salvar" action="#{categoriaDespesaMB.salva()}"
+											update="@form" class="btn btn-primary"/>
+										<p:spacer width="10px" />
+										<p:commandButton value="Recarregar" action="#{categoriaDespesaMB.atualizaBanco()}"
+										 	update="@form" class="btn btn-teal"/>
+									</h:panelGroup>
+								</h:panelGrid>
+							</p:panel>
+							<p:separator/>
+							<p:dataTable id="tblCatDespesa"
+								value="#{categoriaDespesaMB.listCatDesp}" var="d"
+								paginator="true"
+								class="table table-striped table-hover table-bordered" rows="6">
+								<p:column headerText="ID" sortBy="#{d.id}">
+									<p:outputLabel value="#{d.id}" />
+								</p:column>
+								<p:column headerText="Nome: ">
+									<p:outputLabel value="#{d.nome}" />
+								</p:column>
+								<p:column headerText="Descrição: ">
+									<p:outputLabel value="#{d.descricao}" />
+								</p:column>
+								<p:column headerText="Sigla">
+									<p:outputLabel value="#{d.sigla}"/>
+								</p:column>
+								<p:column headerText="Ação">
+									<p:commandButton value="Editar" action="#{categoriaDespesaMB.recebeCategoriaDespesa(d)}"
+										update="@form" class="btn btn-warning btn-sm" />
+									<p:commandButton value="Excluir"
+										action="#{categoriaDespesaMB.recebeCategoriaDespesa(d)}"
+										onclick="PF('modalExcluiCategDesp').show()" class="btn btn-danger btn-sm" />
+								</p:column>
+							</p:dataTable>
+
+							<!-- MODAL confirma excluir categoria -->
+							<p:dialog header="Confirma excluir categoria?"
+								id="modalExcluiCategDesp" widgetVar="modalExcluiCategDesp"
+								responsive="false" modal="true" appendTo="@(body)" width="300"
+								styleClass="card box-danger box-solid">
+								<p:commandButton value="Cancelar" class="btn btn-warning"
+									action="#{categoriaDespesaMB.atualizaBanco()}"
+									onclick="PF('modalExcluiCategDesp').hide()"/>
+								<p:commandButton value="Confirmar"
+									update="formCatDespesas:tblCatDespesa" class="btn btn-danger"
+									action="#{categoriaDespesaMB.removeCategoriaDespesa()}"
+									onclick="PF('modalExcluiCategDesp').hide()" />
+							</p:dialog>
+							<!-- modal -->
+						</h:form>
+						
 					</p:tab>
 
+					<!-- TAB classificação Despesas -->
+					<p:tab title="Classe de Despesas" titleStyleClass="box-teal box-solid">
+						<h:form id="formClasseDespesas">
+							<p:panel id="pnlClasseDesp"  header="Modo Edição" styleClass="box-teal box-solid">
+								<p:panelGrid layout="grid" columns="2" styleClass="ui-fluid p-formgrid p-grid">
+
+									<h:panelGroup>
+										<div class="p-field p-col-8 p-md-3">
+											<p:outputLabel value="Valor:" />
+											<p:inputText
+												value="#{classeContabilMB.classeCont.valorClasseContabil}" />
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup>
+										<div class="p-field p-col-8 p-md-3">
+											<p:outputLabel value="Descrição: " />
+											<p:inputText
+												value="#{classeContabilMB.classeCont.descClasseContabil}" />
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup>
+										<p:panelGrid layout="grid" columns="2">
+											<p:commandButton value="Salvar" class="btn btn-primary"
+												styleClass="btn-block btn-primary btn-flat" update="@form"
+												action="#{classeContabilMB.salvaClassContabil()}" />
+											<p:commandButton value="Recarregar" class="btn btn-teal"
+												styleClass="btn-block btn-teal btn-flat" update="@form"
+												action="#{classeContabilMB.atualizaBanco()}" />
+										</p:panelGrid>
+									</h:panelGroup>
+
+								</p:panelGrid>
+							</p:panel>
+							<p:panel id="painelCCtable1" header="Lista Classe Despesa" styleClass="box-teal box-solid">
+								<p:dataTable id="tblCCtable1" value="#{classeContabilMB.listClasseContabil}" var="c"
+									paginator="true" class="table table-striped table-hover table-bordered" rows="6">
+									<p:column headerText="ID" sortBy="#{c.idClasseContabil}">
+										<p:outputLabel value="#{c.idClasseContabil}" />
+									</p:column>
+									<p:column headerText="Valor" sortBy="#{c.valorClasseContabil}">
+										<p:outputLabel value="#{c.valorClasseContabil}" />
+									</p:column>
+									<p:column headerText="ID" sortBy="#{c.descClasseContabil}">
+										<p:outputLabel value="#{c.descClasseContabil}" />
+									</p:column>
+									<p:column headerText="Ação">
+										<p:commandButton value="Editar" update="@form" class="btn btn-warning btn-sm" 
+											action="#{classeContabilMB.editaClassContabil(c)}"/>
+										<p:commandButton value="Excluir"
+											class="btn btn-danger btn-sm" />
+									</p:column>									
+								</p:dataTable>
+							</p:panel>
+						</h:form>
+					</p:tab>
+
+					<!-- TAB Status de pagamentos de Despesas -->
+					<p:tab title="Status Pagamento" titleStyleClass="box-teal box-solid">
+						<h:form id="formStatusContabil">
+							<p:panel id="pnlStatusContabil"  header="Modo Edição" styleClass="box-teal box-solid">
+								<p:panelGrid layout="grid" columns="2" styleClass="ui-fluid p-formgrid p-grid">
+
+									<h:panelGroup style="width:80%">
+									
+										<h:panelGrid>
+											<div class="p-field p-col-6 p-md-6">
+												<p:outputLabel value="Nome:" />
+												<p:inputText value="#{statusContabilMB.status.nomeContabil}" />
+											</div>
+
+											<div class="p-field p-col-6 p-md-6">
+												<p:outputLabel value="Descrição: " />
+												<p:inputTextarea value="#{statusContabilMB.status.descContabil}" />
+											</div>
+										</h:panelGrid>
+
+										<h:panelGroup>
+											<p:panelGrid layout="grid" columns="2" style="width:40%">
+												<p:commandButton value="Salvar" class="btn btn-primary"
+													styleClass="btn-block btn-primary btn-flat" update="@form"
+													action="#{statusContabilMB.salvaStatusContabil()}" />
+												<p:commandButton value="Recarregar" class="btn btn-teal"
+													styleClass="btn-block btn-teal btn-flat" update="@form"
+													action="#{statusContabilMB.atualizaBanco()}" />
+											</p:panelGrid>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup style="width:230%" id="pnlListaStatus">
+										<p:dataTable id="tblStatusContabil"
+											value="#{statusContabilMB.listaStatus}" var="s"
+											paginator="true"
+											class="table table-striped table-hover table-bordered"
+											rows="6">
+											<p:column headerText="ID" sortBy="#{s.codContabil}">
+												<p:outputLabel value="#{s.codContabil}" />
+											</p:column>
+											<p:column headerText="Nome"
+												sortBy="#{s.nomeContabil}">
+												<p:outputLabel value="#{s.nomeContabil}" />
+											</p:column>
+											<p:column headerText="Descriçaõ" sortBy="#{s.descContabil}">
+												<p:outputLabel value="#{s.descContabil}" />
+											</p:column>
+											<p:column headerText="Ação">
+												<p:menuButton value="Opções" styleClass="btn btn-teal">
+													<p:menuitem value="Editar" icon="fa fa-save" update="@form"
+														action="#{statusContabilMB.recebeStatusContabil(s)}"/>
+													<p:menuitem value="Remover" icon="fa fa-times" update="@(div[id$=excluiStatusContabil])"
+														onclick="PF('modalExcluiStatusContabil').show()"  
+														action="#{statusContabilMB.recebeStatusContabil(s)}"/>
+												</p:menuButton>
+												<!-- MODAL confirma excluir categoria -->
+												<p:dialog header="Confirma excluir categoria?"
+													widgetVar="modalExcluiStatusContabil" responsive="false"
+													modal="true" appendTo="@(body)" width="350"
+													styleClass="card box-danger box-solid">
+													<p:panel>
+														<p:panelGrid columns="2" layout="grid" id="excluiStatusContabil">
+															<p:outputLabel>Nome Status: </p:outputLabel>
+															<p:outputLabel value="#{statusContabilMB.status.nomeContabil}"/>
+															
+															<p:outputLabel value="Descrição: "/>
+															<p:outputLabel value="#{statusContabilMB.status.descContabil}"/>
+														</p:panelGrid>
+														<p:spacer height="20px"/>
+														<p:commandButton value="Cancelar" class="btn btn-warning"
+															onclick="PF('modalExcluiStatusContabil').hide()" 
+															action="#{statusContabilMB.atualizaBanco()}"/>
+														<p:commandButton value="Confirmar" class="btn btn-danger"
+															action="#{statusContabilMB.removeStatusContabil()}"
+															onclick="PF('modalExcluiStatusContabil').hide()" update="@form" />
+													</p:panel>
+												</p:dialog>
+											</p:column>
+										</p:dataTable>
+									</h:panelGroup>
+								</p:panelGrid>
+							</p:panel>
+						</h:form>
+					</p:tab>
+
+					<!-- TAB teste -->
 					<p:tab title="Testes JSF">
-						<h:form id="formCategoria">
-
-							<p:toolbar>
-								<p:toolbarGroup>
-									<p:commandButton value="Adicionar" class="btn btn-success"
-										action="#{testaMB.adicionaLista()}" update="@form" />
-								</p:toolbarGroup>
-							</p:toolbar>
-
+						<h:form id="formCategoriaJsf">
 							<p:fieldset legend="Objetos">
-								<p:panelGrid columns="2">
+								<h:panelGrid columns="4">
 									<h:outputLabel for="categNome" value="Nome: " />
 									<p:inputText id="categNome" value="#{testaMB.categUsu.nomeCat}" />
 
 									<p:outputLabel for="categDesc" value="Descrição: " />
 									<p:inputText id="categDesc"
 										value="#{testaMB.categUsu.descricaoCat}" />
-								</p:panelGrid>
+
+									<p:commandButton value="Adicionar" class="btn btn-success"
+										action="#{testaMB.adicionaLista()}" update="@form" />
+								</h:panelGrid>
+								
 
 								<p:dataTable id="tbCateg" value="#{testaMB.listaCategorias}"
 									var="u">
@@ -132,8 +415,18 @@
 					</p:tab>
 
 				</p:accordionPanel>
+				
 			</p:panel>
 		</div>
+		<!-- MODAL gerencia nivel -->
+		<h:form id="frmModalStatus">
+
+		</h:form>
+
+<!-- 			<ui:include src="/pages/register/modal/modalBootsFace.xhtml" /> -->
+			
+		<!-- modal -->
+
 	</ui:define>
 
 </ui:composition>

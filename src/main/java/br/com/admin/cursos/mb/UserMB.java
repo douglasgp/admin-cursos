@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.bean;
+package br.com.admin.cursos.mb;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -15,8 +15,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import com.github.adminfaces.showcase.jdbc.ConnectionFactory;
-import com.github.adminfaces.showcase.model.CATEGORIAUSUARIO;
 import com.github.adminfaces.showcase.model.User;
+
+import br.com.admin.cursos.constantes.CATEGORIAUSUARIO;
 
 @ManagedBean
 @SessionScoped

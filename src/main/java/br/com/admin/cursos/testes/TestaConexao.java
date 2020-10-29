@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.test;
+package br.com.admin.cursos.testes;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

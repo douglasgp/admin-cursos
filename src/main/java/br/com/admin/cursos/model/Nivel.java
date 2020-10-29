@@ -1,4 +1,4 @@
-package com.github.adminfaces.showcase.model;
+package br.com.admin.cursos.model;
 
 public class Nivel {
 
@@ -39,6 +39,11 @@ public class Nivel {
 
 	public void setDescNivel(String descNivel) {
 		this.descNivel = descNivel;
+	}
+
+	@Override
+	public String toString() {
+		return "Nivel [codNivel=" + codNivel + ", nomeNivel=" + nomeNivel + ", descNivel=" + descNivel + "]";
 	}
 
 }
