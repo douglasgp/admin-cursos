@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="#{layoutMB.template}">
+
+	<ui:define name="title">
+        ILP007
+    </ui:define>
+	<ui:define name="description">
+        Programação Orientada a Objetos
+    </ui:define>
+	<ui:define name="body">
+		<ui:param name="renderFormAsterisks" value="true" />
+		<adm:breadcrumb title="ILP007" />
+
+		<div class="ui-g-12">
+			<p:panel header="Accordion Panel" styleClass="card no-border">
+				<p:accordionPanel>
+					
+					<!-- NOVA TAB gerenciamento de categorias de usuário -->
+					<p:tab title="Categoria de Usuario (NEW)">
+						<h:form id="formCategoria">
+							<p:growl showDetail="true" life="2000" severity="info">
+								<p:autoUpdate/>
+							</p:growl>
+							<p:growl showDetail="true" life="2000" severity="warn">
+								<p:autoUpdate/>
+							</p:growl>
+							<!-- Formulário cadastro / edita categorias -->
+							<p:fieldset legend="Cadastro de categoria" toggleable="true" toggleSpeed="500">
+								<h:form>
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Raio: "/>
+										<p:inputText value="#{raioMB.raio}"/>
+										
+										<p:commandButton value="Calcular" class="btn btn-primary" 
+											action="#{raioMB.calculaRaio()}" update="@form"/>
+										<p:commandButton value="Limpar" class="btn btn-warning"
+											action="#{raioMB.limpar()}" update="@form"/>
+																				
+										<p:outputLabel value="Resultado: "/>
+										<p:outputLabel value="#{raioMB.resultado}"/>
+										
+									</h:panelGrid>
+								</h:form>
+							</p:fieldset>
+
+						</h:form>
+						<!-- MODAL confirma excluir categoria -->
+							<p:dialog header="Confirma excluir categoria?" widgetVar="modalExcluiCategoria" responsive="false" modal="true"
+								appendTo="@(body)" width="350" styleClass="card box-danger box-solid">
+									<!-- <p:outputLabel value="Nome: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.nomeCat}" />
+
+									<p:outputLabel value="Descrição: " />
+									<p:inputText disabled="true" value="#{categoriaUsuarioMB.categUsu.descricaoCat}" />
+ -->
+									<p:commandButton value="Cancelar" class="btn btn-warning"
+										onclick="PF('modalExcluiCategoria').hide()" />
+									<p:commandButton value="Confirmar"
+										class="btn btn-danger" action="#{categoriaUsuarioMB.excluir()}"
+										onclick="PF('modalExcluiCategoria').hide()"/>
+							</p:dialog>
+							<!-- modal -->
+					</p:tab>
+
+				</p:accordionPanel>
+			</p:panel>
+		</div>
+
+	</ui:define>
+
+</ui:composition>
