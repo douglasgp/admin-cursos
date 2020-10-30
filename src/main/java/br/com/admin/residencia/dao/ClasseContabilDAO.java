@@ -40,26 +40,26 @@ public class ClasseContabilDAO {
 		}
 	}
 
-	/* NÃO FINALIZADO */
 	public void salvaClassContabilDAO(ClasseContabil cc) {
 		Connection con = ConectaBDResidencia.getConResidencia();
 		try {
 			PreparedStatement stmt;
-			if(cc.getIdClasseContabil() == null) {
+			if (cc.getIdClasseContabil() == null) {
 				stmt = con.prepareStatement("INSERT INTO classe_despesa (valor_classe, desc_classe) VALUES (?,?)");
 			} else {
-				stmt = con.prepareStatement("UPDATE classe_despesa SET valor_classe=?, desc_classe=? WHERE cod_classe=?");
+				stmt = con
+						.prepareStatement("UPDATE classe_despesa SET valor_classe=?, desc_classe=? WHERE cod_classe=?");
 				stmt.setInt(3, cc.getIdClasseContabil());
 			}
 			stmt.setInt(1, cc.getValorClasseContabil());
-			stmt.setString(2, cc.getDescClasseContabil());
+			stmt.setString(2, cc.getDescClasseContabil().toUpperCase());
 			stmt.execute();
 			ConectaBDResidencia.CloseConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void CloseConnection() {
 		if (con != null) {
 			try {
@@ -72,12 +72,11 @@ public class ClasseContabilDAO {
 		}
 	}
 
-	/* NÃO FINALIZADO */
 	public int removeCatDespDAO(Integer codCat) {
 		int status = 0;
 		try {
 			Connection con = ConectaBDResidencia.getConResidencia();
-			PreparedStatement stmt = con.prepareStatement("DELETE FROM categoria_despesa WHERE id_categoria = " + codCat);
+			PreparedStatement stmt = con.prepareStatement("DELETE FROM classe_despesa WHERE cod_classe = " + codCat);
 			status = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import org.omnifaces.util.Messages;
 
@@ -16,7 +16,7 @@ import br.com.admin.residencia.dao.ClasseContabilDAO;
 import br.com.admin.residencia.model.ClasseContabil;
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class ClasseContabilMB implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,25 +37,36 @@ public class ClasseContabilMB implements Serializable {
 	}
 
 	public void salvaClassContabil() {
-		// ccDAO.salvaClassContabilDAO(this.classeCont);
-
-		if (this.classeCont.getIdClasseContabil() != null) {
-			System.out.println("Editado");
-			Messages.create("SUCESSO!")
-					.detail("Classe de despesa " + this.classeCont.getDescClasseContabil() + " alterada com sucesso!")
-					.add();
-		} else {
+		ccDAO.salvaClassContabilDAO(this.classeCont);
+		if (this.classeCont.getIdClasseContabil() == null) {
 			System.out.println("Novo");
 			Messages.create("SUCESSO!")
-					.detail("Classe de despesa " + this.classeCont.getDescClasseContabil() + " registrada com sucesso!")
+					.detail("Classe de despesa " + this.classeCont.getDescClasseContabil() + " CRIADA com sucesso!")
+					.add();
+		} else {
+			System.out.println("Editado");
+			Messages.create("SUCESSO!")
+					.detail("Classe de despesa " + this.classeCont.getDescClasseContabil() + " ALTERADA com sucesso!")
 					.add();
 		}
 		atualizaBanco();
 	}
 
 	public void editaClassContabil(ClasseContabil cc) {
+		this.classeCont = new ClasseContabil();
 		this.classeCont = cc;
-		System.out.println("Edita CC: " + this.classeCont.getIdClasseContabil());
+	}
+
+	public void removeClasseContabil() {
+		int id = this.ccDAO.removeCatDespDAO(this.classeCont.getIdClasseContabil());
+		if (id == 1) {
+			Messages.create("SUCESSO!").warn()
+					.detail("Classe Despesa EXCLUÍDA com sucesso!").add();
+		} else {
+			Messages.create("ERRO!").warn()
+					.detail("Não foi possível EXCLUIR Casse de Despesa!").add();
+		}
+		atualizaBanco();
 	}
 
 	public void reset() {
@@ -64,6 +75,7 @@ public class ClasseContabilMB implements Serializable {
 
 	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
+		reset();
 		listar();
 	}
 
