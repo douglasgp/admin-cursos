@@ -53,7 +53,7 @@ public class StatusContabilDAO {
 						"UPDATE status SET nome_status=?, desc_status=? WHERE id_status=?");
 				stmt.setInt(3, sc.getCodContabil());
 			}
-			stmt.setString(1, sc.getNomeContabil());
+			stmt.setString(1, sc.getNomeContabil().toUpperCase());
 			stmt.setString(2, sc.getDescContabil());
 			stmt.execute();
 			status = true;
