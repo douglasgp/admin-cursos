@@ -52,7 +52,7 @@ public class ClasseContabilDAO {
 				stmt.setInt(3, cc.getIdClasseContabil());
 			}
 			stmt.setInt(1, cc.getValorClasseContabil());
-			stmt.setString(2, cc.getDescClasseContabil());
+			stmt.setString(2, cc.getDescClasseContabil().toUpperCase());
 			stmt.execute();
 			ConectaBDResidencia.CloseConnection();
 		} catch (SQLException e) {
