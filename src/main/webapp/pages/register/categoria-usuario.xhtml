@@ -285,14 +285,41 @@
 													class="btn btn-warning btn-sm" title="Editar" style="width:40px;"
 													action="#{classeContabilMB.editaClassContabil(c)}"/>
 												<p:commandButton icon="fa fa-trash-o" iconPos="left" title="Excluir"
-													class="btn btn-danger btn-sm fa-trash-o" style="width:40px;"/>
+													class="btn btn-danger btn-sm fa-trash-o" style="width:40px;"
+													update="@(div[id$=excluiClasseContabil])"
+													onclick="PF('modalExcluiClasseContabil').show()"  
+													action="#{classeContabilMB.editaClassContabil(c)}"/>
+												<!-- MODAL confirma excluir categoria -->
+												<p:dialog header="Confirma excluir categoria?"
+													widgetVar="modalExcluiClasseContabil" responsive="false"
+													modal="true" appendTo="@(body)" width="350"
+													styleClass="card box-danger box-solid">
+													<p:panel>
+														<p:panelGrid columns="2" layout="grid"
+															id="excluiClasseContabil">
+															<p:outputLabel value="Valor: " />
+															<p:outputLabel
+																value="#{classeContabilMB.classeCont.valorClasseContabil}" />
+
+															<p:outputLabel value="Descrição: " />
+															<p:outputLabel
+																value="#{classeContabilMB.classeCont.descClasseContabil}" />
+														</p:panelGrid>
+														<p:spacer height="20px" />
+														<p:commandButton value="Cancelar" class="btn btn-warning"
+															onclick="PF('modalExcluiClasseContabil').hide()"
+															action="#{classeContabilMB.atualizaBanco()}" />
+														<p:commandButton value="Confirmar" class="btn btn-danger"
+															action="#{classeContabilMB.removeClasseContabil()}"
+															onclick="PF('modalExcluiClasseContabil').hide()"
+															update="@form" />
+													</p:panel>
+												</p:dialog>
+												<!-- modal -->
 											</p:column>
 										</p:dataTable>
 									</h:panelGroup>
 								</p:panelGrid>
-							</p:panel>
-							<p:panel id="painelCCtable1" header="Lista Classe Despesa" styleClass="box-teal box-solid">
-								
 							</p:panel>
 						</h:form>
 					</p:tab>

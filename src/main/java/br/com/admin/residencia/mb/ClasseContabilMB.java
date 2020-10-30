@@ -37,7 +37,7 @@ public class ClasseContabilMB implements Serializable {
 	}
 
 	public void salvaClassContabil() {
-		ccDAO.salvaClassContabilDAO(this.classeCont);	
+		ccDAO.salvaClassContabilDAO(this.classeCont);
 		if (this.classeCont.getIdClasseContabil() == null) {
 			System.out.println("Novo");
 			Messages.create("SUCESSO!")
@@ -55,7 +55,18 @@ public class ClasseContabilMB implements Serializable {
 	public void editaClassContabil(ClasseContabil cc) {
 		this.classeCont = new ClasseContabil();
 		this.classeCont = cc;
-		System.out.println("Edita CC: " + this.classeCont.getIdClasseContabil());
+	}
+
+	public void removeClasseContabil() {
+		int id = this.ccDAO.removeCatDespDAO(this.classeCont.getIdClasseContabil());
+		if (id == 1) {
+			Messages.create("SUCESSO!").warn()
+					.detail("Classe Despesa EXCLUÍDA com sucesso!").add();
+		} else {
+			Messages.create("ERRO!").warn()
+					.detail("Não foi possível EXCLUIR Casse de Despesa!").add();
+		}
+		atualizaBanco();
 	}
 
 	public void reset() {
@@ -64,6 +75,7 @@ public class ClasseContabilMB implements Serializable {
 
 	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
+		reset();
 		listar();
 	}
 
