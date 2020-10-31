@@ -83,4 +83,19 @@ public class CategoriaDespesaDAO {
 		}
 		return status;
 	}
+
+	public int pesquisaPorNome(String nome) {
+		int cod = 0;
+		try {
+			Connection con = ConectaBDResidencia.getConResidencia();
+			PreparedStatement stmt = con.prepareStatement("SELECT id_categoria FROM categoria_despesa WHERE nome_categoria ='" + nome +"'");
+			ResultSet id = stmt.executeQuery();
+			cod = id.getInt("id_categoria");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cod;
+	}
+
 }
