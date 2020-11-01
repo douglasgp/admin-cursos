@@ -16,6 +16,79 @@
 				<p:autoUpdate />
 			</p:growl>
 			
+			<p:panel styleClass="card">
+				<p:toolbar>
+					<f:facet name="left">
+						<p:outputLabel value="Gestão de Despesas" />
+					</f:facet>
+					<f:facet name="right">
+						<p:commandButton value="Salvar" class="btn btn-primary"
+							icon="fa fa-file-text-o"
+							update="@(div[id$=novaDespesa])"
+							onclick="PF('modalNovaDespesa').show()" />
+						<p:spacer width="20px" />
+						<p:commandButton value="Recarregar" class="btn btn-teal"
+							icon="fa fa-refresh" action="#{contabilidadeMB.atualizaBanco()}"
+							update=":frmDespesa:pnlCadDesp" />
+					</f:facet>
+				</p:toolbar>
+				<!-- MODAL confirma excluir categoria -->
+				<p:dialog header="Nova Despesa"
+					widgetVar="modalNovaDespesa" responsive="true"
+					modal="true" appendTo="@(body)" width="800px"
+					styleClass="card box-primary box-solid">
+					<p:panel>
+						<h:panelGrid columns="5" id="novaDespesa">
+							<h:panelGroup>
+								<div class="p-field p-col-2 p-md-3">
+									<p:outputLabel value="Cod. Categoria" />
+									<p:inputText disabled="true"
+										value="#{contabilidadeMB.contabilidade.id}" />
+								</div>
+							</h:panelGroup>
+							<p:spacer width="20px" />
+							<h:panelGroup>
+								<div class="p-field p-col-4 p-md-3">
+									<p:outputLabel value="Nome da despesa" />
+									<p:inputText id="nomeDespesa" placeholder="Titulo da despesa"
+										value="#{contabilidadeMB.contabilidade.nome}" />
+								</div>
+							</h:panelGroup>
+							<p:spacer width="20px" />
+							<h:panelGroup>
+								<div class="p-field p-col-4 p-md-3">
+									<p:outputLabel value="Valor da despesa" />
+									<p:inputText id="valorDespesa"
+										value="#{contabilidadeMB.contabilidade.valor}"
+										placeholder="Informe apenas números com ponto" />
+								</div>
+							</h:panelGroup>
+							<p:spacer width="20px" />
+							<h:panelGroup>
+								<div class="p-field p-col-4 p-md-3">
+									<p:outputLabel value="Status Pagamento" />
+									<p:selectOneMenu id="selectStatusContabil"
+										value="#{contabilidadeMB.statusContabil.nomeContabil}">
+										<f:selectItem itemLabel="Escolha ..." />
+										<f:selectItems value="#{contabilidadeMB.itensStatusContabil}"
+											var="n" itemLabel="#{n.label}"
+											itemDescription="#{n.description}" />
+									</p:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</h:panelGrid>
+						<p:spacer width="20px" />
+						<!-- BOTÕES -->
+						<h:panelGroup>
+							<p:commandButton value="Salvar" class="btn btn-primary"
+								onclick="PF('modalNovaDespesa').hide()" update="@form" />
+							<p:commandButton value="Cancelar" class="btn btn-warning"
+								onclick="PF('modalNovaDespesa').hide()" />
+						</h:panelGroup>
+					</p:panel>
+				</p:dialog>
+			</p:panel>
+			
 			<p:panel id="pnlCadDesp" header="Gestão de de Despesas" style="margin-bottom:20px;">
 			
 				<p:panelGrid layout="grid" columns="2" styleClass="ui-fluid p-formgrid p-grid">
@@ -32,14 +105,14 @@
 							<h:panelGroup>
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Nome da despesa" />
-									<p:inputText id="nomeDespesa" placeholder="Titulo da despesa" value="#{contabilidadeMB.contabilidade.nome}"/>
+									<p:inputText placeholder="Titulo da despesa" value="#{contabilidadeMB.contabilidade.nome}"/>
 								</div>
 							</h:panelGroup>
 							<p:spacer width="20px" />					
 							<h:panelGroup>
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Valor da despesa" />
-									<p:inputText id="valorDespesa" value="#{contabilidadeMB.contabilidade.valor}"
+									<p:inputText value="#{contabilidadeMB.contabilidade.valor}"
 										placeholder="Informe apenas números com ponto" />
 								</div>
 							</h:panelGroup>
@@ -47,7 +120,8 @@
 							<h:panelGroup>
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Status Pagamento" />
-									<p:selectOneMenu id="selectStatusContabil" value="#{contabilidadeMB.statusContabil.nomeContabil}">
+									<p:selectOneMenu value="#{contabilidadeMB.statusContabil.nomeContabil}">
+										<f:ajax listener="#{contabilidadeMB.recuperaStatusPagamento()}"/>										
 										<f:selectItem itemLabel="Escolha ..." />
 										<f:selectItems value="#{contabilidadeMB.itensStatusContabil}" var="n"
 											itemLabel="#{n.label}" itemDescription="#{n.description}" />

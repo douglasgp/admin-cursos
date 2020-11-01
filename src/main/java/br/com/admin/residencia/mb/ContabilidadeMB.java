@@ -66,7 +66,7 @@ public class ContabilidadeMB implements Serializable {
 		this.catDesp = new CategoriaDespesa();
 		this.dataContabil = null;
 		this.statusContabil = new StatusContabil();
-
+		this.listaContabilidade = despDao.listaDespesa();
 	}
 
 	public void listar() {
@@ -100,7 +100,6 @@ public class ContabilidadeMB implements Serializable {
 			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
 					.add();
 		}
-		reset();
 		atualizaBanco();
 	}
 
@@ -114,8 +113,10 @@ public class ContabilidadeMB implements Serializable {
 		for (SelectItem si : itemsCatDesp) {
 			if (si.getLabel().equals(this.catDesp.getNome())) {
 				for (CategoriaDespesa cd : listCategoriasDesp) {
-					if (si.getLabel().equals(cd.getNome())) {
+					if (this.catDesp.getNome().equals(cd.getNome())) {
+						this.catDesp = new CategoriaDespesa();
 						this.catDesp = cd;
+						break;
 					}
 				}
 			}
