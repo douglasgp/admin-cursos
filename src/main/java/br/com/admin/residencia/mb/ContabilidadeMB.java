@@ -2,22 +2,20 @@ package br.com.admin.residencia.mb;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.omnifaces.util.Messages;
 
 import com.github.adminfaces.showcase.jdbc.FabricaConexao;
-import com.sun.mail.imap.protocol.Status;
 
 import br.com.admin.residencia.dao.CategoriaDespesaDAO;
 import br.com.admin.residencia.dao.DespesaDAO;
@@ -89,7 +87,7 @@ public class ContabilidadeMB implements Serializable {
 		this.contabilidade.setIdCategoriaDespesa(this.catDesp.getId());
 		this.contabilidade.setIdStatusContabil(this.statusContabil.getCodContabil());
 
-		System.out.println("Categoria: " + this.catDesp.getId());
+		System.out.println("Status Contabil: " + this.statusContabil.toString());
 		System.out.println("Contabilidade: " + this.contabilidade.toString());
 
 		status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
@@ -110,29 +108,21 @@ public class ContabilidadeMB implements Serializable {
 	 */
 
 	public void recuperaCategoria() {
-		for (SelectItem si : itemsCatDesp) {
-			if (si.getLabel().equals(this.catDesp.getNome())) {
-				for (CategoriaDespesa cd : listCategoriasDesp) {
-					if (this.catDesp.getNome().equals(cd.getNome())) {
-						this.catDesp = new CategoriaDespesa();
-						this.catDesp = cd;
-						break;
-					}
-				}
+		this.listCategoriasDesp = catDespDao.listaCategoriaDespesa();
+		for (CategoriaDespesa cd : listCategoriasDesp) {
+			if (this.catDesp.getNome().equals(cd.getNome())) {
+				this.catDesp = cd;
+				break;
 			}
 		}
 	}
 
 	public void recuperaStatusPagamento() {
-		for (SelectItem si : itensStatusContabil) {
-			if (si.getLabel().equals(this.statusContabil.getNomeContabil())) {
-				for (StatusContabil sc : listaStatusContabil) {
-					if (si.getLabel().equals(sc.getNomeContabil())) {
-						this.statusContabil = sc;
-					}
-				}
+		this.listaStatusContabil = statusDao.listaStatusContabil();
+		for (StatusContabil sc : this.listaStatusContabil) {
+			if (this.statusContabil.getNomeContabil().equals(sc.getNomeContabil())) {
+				this.statusContabil = sc;
 			}
-
 		}
 	}
 
@@ -141,7 +131,7 @@ public class ContabilidadeMB implements Serializable {
 	 * componente selectOneMenu
 	 */
 	public void editaContabilidade(Contabilidade c) {
-
+		this.contabilidade = new Contabilidade();
 		this.contabilidade = c;
 		this.editaContabil = true;
 

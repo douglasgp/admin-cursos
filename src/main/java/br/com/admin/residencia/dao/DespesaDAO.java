@@ -52,14 +52,13 @@ public class DespesaDAO {
 			PreparedStatement stmt;
 			if (cd.getId() == null) {
 				stmt = con.prepareStatement(
-						"INSERT INTO despesa (nome_despesa, valor_total, desc_despesa, id_categoria, status_pagamento, data_emissao) VALUES (?,?,?,?,?)");
+						"INSERT INTO despesa (nome_despesa, valor_total, desc_despesa, id_categoria, status_pagamento, data_emissao) VALUES (?,?,?,?,?,?)");
 			} else {
 				stmt = con.prepareStatement(
 						"UPDATE despesa SET nome_despesa=?, valor_total=?, desc_despesa=?, id_categoria=?, status_pagamento=?, data_emissao=? WHERE cod_despesa=?");
 				stmt.setInt(7, cd.getId());
 			}
 			String novaData = sdf.format(cd.getData());
-			System.out.println("Data no banco" + novaData);
 			stmt.setString(1, cd.getNome());
 			stmt.setDouble(2, cd.getValor());
 			stmt.setString(3, cd.getDescricao());
