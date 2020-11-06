@@ -1,7 +1,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html">
+                xmlns:h="http://java.sun.com/jsf/html"
+               	xmlns:f="http://java.sun.com/jsf/core">
 
 <section class="content-header" style="padding-left: 0px">
     <h1 >Dashboard Financeiro (projeto Residencia)
@@ -201,6 +202,106 @@
 </div>
 <!-- /.col -->
 </div>
+<h:form>
+
+	<p:growl showDetail="true" life="2000" severity="info">
+		<p:autoUpdate />
+	</p:growl>
+	<p:growl showDetail="true" life="2000" severity="warn">
+		<p:autoUpdate />
+	</p:growl>
+	<p:outputPanel>
+	<p:panel id="pnlListaDesp" header="Lista de Despesas"
+			style="margin-bottom:20px" styleClass="box-teal box-solid">
+			<f:facet name="right">
+				<p:commandButton value="Novo" />
+			</f:facet>
+			<p:dataTable id="tblCatDespesa" widgetVar="tblDespesa"
+				emptyMessage="Nenhum registro encontrado com os critérios de busca"
+				value="#{contabilidadeMB.listaContabilidade}" var="d"
+				paginator="true" rowKey="#{d.id}"
+				class="table table-striped table-hover table-bordered" rows="6">
+
+				<p:column headerText="ID" sortBy="#{d.id}">
+					<p:outputLabel value="#{d.id}" />
+				</p:column>
+				<p:column headerText="Nome" sortBy="#{d.nome}">
+					<p:outputLabel value="#{d.nome}" />
+				</p:column>
+				<p:column headerText="Valor" sortBy="#{d.valor}">
+					<p:outputLabel value="#{d.valor}" />
+				</p:column>
+				<p:column headerText="Date" sortBy="#{d.data}">
+					<p:outputLabel value="#{d.data}" />
+				</p:column>
+				<p:column headerText="Status" sortBy="#{d.idStatusContabil}">
+					<p:outputLabel value="#{d.idStatusContabil}" />
+				</p:column>
+				<p:column headerText="Ação">
+					<p:commandButton value="Editar" class="btn btn-warning btn-sm"
+						action="#{contabilidadeMB.formularioContabil(d)}" />
+					<!-- update=":frmDespesa:pnlCadDesp"  -->
+					<p:commandButton value="Excluir" class="btn btn-danger btn-sm"
+						update="@(div[id$=formDelDespesa])"
+						onclick="PF('modalDelDespesa').show()"
+						action="#{contabilidadeMB.editaContabilidade(d)}" />
+
+					<!-- MODAL remove despesa -->
+					<p:dialog header="Nova Despesa" widgetVar="modalDelDespesa"
+						position="center" responsive="true" modal="true"
+						appendTo="@(body)" width="500px"
+						styleClass="card box-primary box-solid">
+						<p:panel id="formDelDespesa">
+							<p:panelGrid columns="3" id="pnlDelDespesa" layout="grid">
+								<h:panelGroup>
+									<div class="p-field p-col-1 p-md-3">
+										<p:outputLabel value="Cod. Contabil: " />
+										<p:outputLabel id="idContabilDel"
+											value="#{contabilidadeMB.contabilidade.id}" />
+									</div>
+								</h:panelGroup>
+								<p:spacer width="20px" />
+								<h:panelGroup>
+									<div class="p-field p-col-1 p-md-3">
+										<p:outputLabel value="Título da despesa: " />
+										<p:outputLabel id="nomeContabilDel"
+											value="#{contabilidadeMB.contabilidade.nome}" />
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<div class="p-field p-col-1 p-md-3">
+										<p:outputLabel value="Valor: " />
+										<p:outputLabel id="valorContabilDel"
+											value="#{contabilidadeMB.contabilidade.valor}" />
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<div class="p-field p-col-1 p-md-3">
+										<p:outputLabel value="Data: " />
+										<p:outputLabel id="dataContabilDel"
+											value="#{contabilidadeMB.contabilidade.data}" />
+									</div>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:spacer width="20px" />
+							<!-- BOTÕES -->
+							<h:panelGroup>
+								<p:commandButton value="Salvar" class="btn btn-primary"
+									onclick="PF('modalDelDespesa').hide()" update="@form" />
+								<p:commandButton value="Cancelar" class="btn btn-warning"
+									onclick="PF('modalDelDespesa').hide()" />
+							</h:panelGroup>
+						</p:panel>
+					</p:dialog>
+
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</p:outputPanel>
+</h:form>
+	
         <!-- /.row -->
 <h:outputScript library="js" name="chart.min.js"/>
 <script type="text/javascript">

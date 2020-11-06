@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -51,27 +50,36 @@ public class ContabilidadeMB implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		this.listaContabilidade = new ArrayList<Contabilidade>();
+
 // 		this.listCategoriasDesp = new ArrayList<CategoriaDespesa>();
-		reset();
+		this.listaContabilidade = new ArrayList<Contabilidade>();
 		listar();
 
 	}
 
-	public void reset() {
-		System.out.println("Resetando ...");
-		this.contabilidade = new Contabilidade();
-		this.catDesp = new CategoriaDespesa();
-		this.dataContabil = null;
-		this.statusContabil = new StatusContabil();
-		this.listaContabilidade = despDao.listaDespesa();
-	}
+	/*
+	 * public void reset() { System.out.println("Resetando ..."); this.contabilidade
+	 * = new Contabilidade(); this.catDesp = new CategoriaDespesa();
+	 * this.dataContabil = null; this.statusContabil = new StatusContabil();
+	 * this.listaContabilidade = despDao.listaDespesa(); this.editaContabil = false;
+	 * }
+	 */
 
 	public void listar() {
 		System.out.println("Listando ...");
 		this.listaContabilidade = despDao.listaDespesa();
 		this.listCategoriasDesp = catDespDao.listaCategoriaDespesa();
 		this.listaStatusContabil = statusDao.listaStatusContabil();
+	}
+
+	/*
+	 * Método para evitar que as listas que contenha componente SelectItem sejam
+	 * recarregadas com itens duplicados ao realizar uma nova requisição na mudança
+	 * de página.
+	 */
+	public void listaSelectItem() {
+		this.itemsCatDesp = new ArrayList<SelectItem>();
+		this.itensStatusContabil = new ArrayList<SelectItem>();
 
 		for (CategoriaDespesa itemCatDesp : listCategoriasDesp) {
 			itemsCatDesp.add(new SelectItem(itemCatDesp.getNome()));
@@ -91,6 +99,9 @@ public class ContabilidadeMB implements Serializable {
 		System.out.println("Contabilidade: " + this.contabilidade.toString());
 
 		status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
+		System.out.println("SALVO: " + status);
+		// dashboardContabil();
+		
 		if (this.contabilidade.getId() == null) {
 			Messages.create("SUCESSO!")
 					.detail("Despesa [ " + this.contabilidade.getNome() + " ] registrada com sucesso!").add();
@@ -98,8 +109,9 @@ public class ContabilidadeMB implements Serializable {
 			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
 					.add();
 		}
-		atualizaBanco();
+		 
 	}
+	
 
 	/*
 	 * public void pesquisaIdCategoria() { for (CategoriaDespesa cd :
@@ -112,6 +124,7 @@ public class ContabilidadeMB implements Serializable {
 		for (CategoriaDespesa cd : listCategoriasDesp) {
 			if (this.catDesp.getNome().equals(cd.getNome())) {
 				this.catDesp = cd;
+				System.out.println("get Categoria: " + this.catDesp.toString());
 				break;
 			}
 		}
@@ -119,9 +132,11 @@ public class ContabilidadeMB implements Serializable {
 
 	public void recuperaStatusPagamento() {
 		this.listaStatusContabil = statusDao.listaStatusContabil();
-		for (StatusContabil sc : this.listaStatusContabil) {
+		for (StatusContabil sc : listaStatusContabil) {
 			if (this.statusContabil.getNomeContabil().equals(sc.getNomeContabil())) {
 				this.statusContabil = sc;
+				System.out.println("get Status: " + this.statusContabil.toString());
+				break;
 			}
 		}
 	}
@@ -146,6 +161,7 @@ public class ContabilidadeMB implements Serializable {
 				this.statusContabil = sc;
 			}
 		}
+		System.out.println("Edita Contabil: " + this.contabilidade.toString());
 	}
 
 	public void converteDate() throws ParseException {
@@ -175,9 +191,22 @@ public class ContabilidadeMB implements Serializable {
 
 	}
 
-	public void atualizaBanco() throws ParseException {
+	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
-		reset();
+		// reset();
+	}
+
+	public String formularioContabil(Contabilidade c) {
+		this.contabilidade = new Contabilidade();
+		editaContabilidade(c);
+		listaSelectItem();
+		return "formulario-despesa";
+	}
+
+	public String dashboardContabil() {
+		System.out.println("Return dashboard contabil");
+		atualizaBanco();
+		return "financeiro";
 	}
 
 	public Contabilidade getContabilidade() {
