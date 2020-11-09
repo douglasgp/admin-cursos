@@ -53,18 +53,21 @@ public class ContabilidadeMB implements Serializable {
 
 // 		this.listCategoriasDesp = new ArrayList<CategoriaDespesa>();
 		this.listaContabilidade = new ArrayList<Contabilidade>();
+		System.out.println();
 		listar();
 
 	}
-
-	/*
-	 * public void reset() { System.out.println("Resetando ..."); this.contabilidade
-	 * = new Contabilidade(); this.catDesp = new CategoriaDespesa();
-	 * this.dataContabil = null; this.statusContabil = new StatusContabil();
-	 * this.listaContabilidade = despDao.listaDespesa(); this.editaContabil = false;
-	 * }
-	 */
-
+	
+	public void reset() {
+		System.out.println("Resetando ...");
+		this.contabilidade = new Contabilidade();
+		this.catDesp = new CategoriaDespesa();
+		this.dataContabil = null;
+		this.statusContabil = new StatusContabil();
+		this.listaContabilidade = despDao.listaDespesa();
+		this.editaContabil = false;
+	}
+	 
 	public void listar() {
 		System.out.println("Listando ...");
 		this.listaContabilidade = despDao.listaDespesa();
@@ -99,7 +102,6 @@ public class ContabilidadeMB implements Serializable {
 		System.out.println("Contabilidade: " + this.contabilidade.toString());
 
 		status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
-		System.out.println("SALVO: " + status);
 		// dashboardContabil();
 		
 		if (this.contabilidade.getId() == null) {
@@ -108,8 +110,7 @@ public class ContabilidadeMB implements Serializable {
 		} else {
 			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
 					.add();
-		}
-		 
+		}	
 	}
 	
 
@@ -193,7 +194,8 @@ public class ContabilidadeMB implements Serializable {
 
 	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
-		// reset();
+		this.listaContabilidade = despDao.listaDespesa();
+		reset();
 	}
 
 	public String formularioContabil(Contabilidade c) {

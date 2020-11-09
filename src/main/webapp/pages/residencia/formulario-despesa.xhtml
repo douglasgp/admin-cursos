@@ -9,7 +9,13 @@
 
 	<ui:define name="body">
 		<h:form id="frmDespesa">
-			
+			<p:growl showDetail="true" life="2000" severity="info">
+				<p:autoUpdate />
+			</p:growl>
+			<p:growl showDetail="true" life="2000" severity="warn">
+				<p:autoUpdate />
+			</p:growl>
+
 			<p:panel styleClass="card">				
 				<!-- MODAL edita despesa -->
 				<p:dialog header="Nova Despesa"
@@ -83,7 +89,7 @@
 							<h:panelGroup>
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Nome da despesa" />
-									<p:inputText placeholder="Titulo da despesa" value="#{contabilidadeMB.contabilidade.nome}"/>
+									<p:inputText value="#{contabilidadeMB.contabilidade.nome}"/>
 								</div>
 							</h:panelGroup>
 							<p:spacer width="20px" />					
@@ -129,7 +135,7 @@
 							<h:panelGroup>
 								<div class="p-field p-col-8 p-md-3">
 									<p:outputLabel value="Descrição da despesa" />
-									<p:inputTextarea id="descDespesa" value="#{contabilidadeMB.contabilidade.descricao}" />
+									<p:inputTextarea value="#{contabilidadeMB.contabilidade.descricao}" />
 								</div>
 							</h:panelGroup>
 						
@@ -140,8 +146,8 @@
 						<h:panelGrid columns="3">
 							<p:commandButton value="Salvar" class="btn btn-primary"
 								icon="fa fa-plus-square-o" iconPos="right"
-								action="#{contabilidadeMB.dashboardContabil()}">
-								<p:ajax listener="#{contabilidadeMB.salvaContabilidade()}"/>
+								action="#{contabilidadeMB.salvaContabilidade()}" >
+								<!-- <p:ajax listener="#{contabilidadeMB.salvaContabilidade()}" /> -->
 							</p:commandButton>
 							<p:spacer width="20px"/>
 							<p:commandButton value="Voltar" class="btn btn-warning" 
