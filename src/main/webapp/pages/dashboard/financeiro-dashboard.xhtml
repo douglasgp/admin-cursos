@@ -14,7 +14,11 @@
 <div class="col-md-3 col-sm-6 col-xs-12">
     <div class="info-box">
 
-        <span class="info-box-icon bg-aqua"><i class="fa fa-motorcycle"></i></span>
+        <span class="info-box-icon bg-aqua">
+        	<a href="#">
+        		<i class="fa fa-motorcycle"></i>
+        	</a>
+        </span>
 
         <div class="info-box-content">
             <span class="info-box-text">Combustivel</span>
@@ -213,9 +217,13 @@
 	<p:outputPanel>
 	<p:panel id="pnlListaDesp" header="Lista de Despesas"
 			style="margin-bottom:20px" styleClass="box-teal box-solid">
-			<f:facet name="right">
-				<p:commandButton value="Novo" />
-			</f:facet>
+			<p:toolbar>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Nova" icon="fa fa-file-text-o" styleClass="btn-primary"
+						title="Nova despesa" action="#{contabilidadeMB.novaDespesa()}">
+					</p:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
 			<p:dataTable id="tblCatDespesa" widgetVar="tblDespesa"
 				emptyMessage="Nenhum registro encontrado com os critérios de busca"
 				value="#{contabilidadeMB.listaContabilidade}" var="d"

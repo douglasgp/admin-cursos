@@ -151,7 +151,9 @@
 							</p:commandButton>
 							<p:spacer width="20px"/>
 							<p:commandButton value="Voltar" class="btn btn-warning" 
-								icon="fa fa-arrow-left" action="#{contabilidadeMB.dashboardContabil()}" />
+								icon="fa fa-arrow-left" action="#{contabilidadeMB.dashboardContabil()}">
+								<p:ajax listener="#{contabilidadeMB.reset()}"/>
+							</p:commandButton>
 						</h:panelGrid>
 					</h:panelGroup>	
 				</p:panelGrid>

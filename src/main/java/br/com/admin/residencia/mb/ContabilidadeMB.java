@@ -92,28 +92,32 @@ public class ContabilidadeMB implements Serializable {
 		}
 	}
 
-	public void salvaContabilidade() throws Exception {
-		boolean status = false;
-		// pesquisaIdCategoria();
-		this.contabilidade.setIdCategoriaDespesa(this.catDesp.getId());
-		this.contabilidade.setIdStatusContabil(this.statusContabil.getCodContabil());
-
-		System.out.println("Status Contabil: " + this.statusContabil.toString());
-		System.out.println("Contabilidade: " + this.contabilidade.toString());
-
-		status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
-		// dashboardContabil();
-		
-		if (this.contabilidade.getId() == null) {
-			Messages.create("SUCESSO!")
-					.detail("Despesa [ " + this.contabilidade.getNome() + " ] registrada com sucesso!").add();
+	public void salvaContabilidade() {
+		System.out.println("Salvando ... ");
+		if(!this.editaContabil) {
+			this.editaContabil = true;
 		} else {
-			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
-					.add();
-		}	
+			boolean status = false;
+			// pesquisaIdCategoria();
+			this.contabilidade.setIdCategoriaDespesa(this.catDesp.getId());
+			this.contabilidade.setIdStatusContabil(this.statusContabil.getCodContabil());
+
+			System.out.println("Status Contabil: " + this.statusContabil.toString());
+			System.out.println("Contabilidade: " + this.contabilidade.toString());
+
+			status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
+			// dashboardContabil();
+
+			if (this.contabilidade.getId() == null) {
+				Messages.create("SUCESSO!")
+						.detail("Despesa [ " + this.contabilidade.getNome() + " ] registrada com sucesso!").add();
+			} else {
+				Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
+						.add();
+			}
+		}
 	}
 	
-
 	/*
 	 * public void pesquisaIdCategoria() { for (CategoriaDespesa cd :
 	 * listCategoriasDesp) { if (cd.getNome().equals(this.catDesp.getNome())) {
@@ -146,11 +150,11 @@ public class ContabilidadeMB implements Serializable {
 	 * Pesquisa por ID e atribui à variável catDesp (SelectItem) para exibir em
 	 * componente selectOneMenu
 	 */
-	public void editaContabilidade(Contabilidade c) {
-		this.contabilidade = new Contabilidade();
-		this.contabilidade = c;
-		this.editaContabil = true;
-
+	public void editaContabilidade() {
+		// this.contabilidade = new Contabilidade();
+		// this.contabilidade = c;
+		listaSelectItem();
+		
 		for (CategoriaDespesa cd : listCategoriasDesp) {
 			if (cd.getId() == this.contabilidade.getIdCategoriaDespesa()) {
 				this.catDesp = cd;
@@ -162,7 +166,6 @@ public class ContabilidadeMB implements Serializable {
 				this.statusContabil = sc;
 			}
 		}
-		System.out.println("Edita Contabil: " + this.contabilidade.toString());
 	}
 
 	public void converteDate() throws ParseException {
@@ -200,15 +203,27 @@ public class ContabilidadeMB implements Serializable {
 
 	public String formularioContabil(Contabilidade c) {
 		this.contabilidade = new Contabilidade();
-		editaContabilidade(c);
-		listaSelectItem();
+		this.contabilidade = c;
+		this.editaContabil = true;
+		editaContabilidade();
 		return "formulario-despesa";
 	}
+	
+	public String novaDespesa() {
+		this.contabilidade = new Contabilidade();
+		this.editaContabil = false;
+		editaContabilidade();
+		return "formulario-despesa";		
+	}	
 
 	public String dashboardContabil() {
 		System.out.println("Return dashboard contabil");
 		atualizaBanco();
 		return "financeiro";
+	}
+	
+	public void removeDespesa(Contabilidade c) {
+		
 	}
 
 	public Contabilidade getContabilidade() {
