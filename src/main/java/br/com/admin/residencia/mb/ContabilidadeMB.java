@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -19,8 +18,10 @@ import com.github.adminfaces.showcase.jdbc.FabricaConexao;
 
 import br.com.admin.residencia.dao.CategoriaDespesaDAO;
 import br.com.admin.residencia.dao.DespesaDAO;
+import br.com.admin.residencia.dao.StatusContabilDAO;
 import br.com.admin.residencia.model.CategoriaDespesa;
 import br.com.admin.residencia.model.Contabilidade;
+import br.com.admin.residencia.model.StatusContabil;
 
 @ManagedBean
 @SessionScoped
@@ -28,13 +29,19 @@ public class ContabilidadeMB implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Contabilidade contabilidade;
-	private List<Contabilidade> listaContabilidade;
-	private DespesaDAO despDao = new DespesaDAO();
-
+	private StatusContabil statusContabil;
 	private CategoriaDespesa catDesp = new CategoriaDespesa();
+
+	private DespesaDAO despDao = new DespesaDAO();
 	private CategoriaDespesaDAO catDespDao = new CategoriaDespesaDAO();
+	private StatusContabilDAO statusDao = new StatusContabilDAO();
+
 	private List<CategoriaDespesa> listCategoriasDesp = catDespDao.listaCategoriaDespesa();
+	private List<StatusContabil> listaStatusContabil = statusDao.listaStatusContabil();
+	private List<Contabilidade> listaContabilidade;
 	private List<SelectItem> itemsCatDesp = new ArrayList<SelectItem>();
+	private List<SelectItem> itensStatusContabil = new ArrayList<SelectItem>();
+
 	private SelectItem editaCatDesp = new SelectItem();
 
 	private boolean editaContabil = false;
@@ -43,62 +50,96 @@ public class ContabilidadeMB implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		this.listaContabilidade = new ArrayList<Contabilidade>();
+
 // 		this.listCategoriasDesp = new ArrayList<CategoriaDespesa>();
-		reset();
+		this.listaContabilidade = new ArrayList<Contabilidade>();
+		System.out.println();
 		listar();
 
 	}
-
+	
 	public void reset() {
 		System.out.println("Resetando ...");
 		this.contabilidade = new Contabilidade();
 		this.catDesp = new CategoriaDespesa();
 		this.dataContabil = null;
+		this.statusContabil = new StatusContabil();
+		this.listaContabilidade = despDao.listaDespesa();
+		this.editaContabil = false;
 	}
-
+	 
 	public void listar() {
 		System.out.println("Listando ...");
 		this.listaContabilidade = despDao.listaDespesa();
 		this.listCategoriasDesp = catDespDao.listaCategoriaDespesa();
+		this.listaStatusContabil = statusDao.listaStatusContabil();
+	}
+
+	/*
+	 * Método para evitar que as listas que contenha componente SelectItem sejam
+	 * recarregadas com itens duplicados ao realizar uma nova requisição na mudança
+	 * de página.
+	 */
+	public void listaSelectItem() {
+		this.itemsCatDesp = new ArrayList<SelectItem>();
+		this.itensStatusContabil = new ArrayList<SelectItem>();
+
 		for (CategoriaDespesa itemCatDesp : listCategoriasDesp) {
 			itemsCatDesp.add(new SelectItem(itemCatDesp.getNome()));
 		}
-	}
-
-	public void salvaContabilidade() throws ParseException {
-		boolean status = false;
-		// pesquisaIdCategoria();
-		this.contabilidade.setIdCategoriaDespesa(this.catDesp.getId());
-		// converteDate();
-		System.out.println("Contabilidade: " + this.contabilidade.toString());
-		status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
-		if (this.contabilidade.getId() == null) {
-			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] registrada com sucesso!").add();
-		} else {
-			Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!").add();
+		for (StatusContabil statusContabil : listaStatusContabil) {
+			itensStatusContabil.add(new SelectItem(statusContabil.getNomeContabil()));
 		}
-		System.out.println(status);
-
-		reset();
-		atualizaBanco();
 	}
 
-	public void pesquisaIdCategoria() {
+	public void salvaContabilidade() {
+		System.out.println("Salvando ... ");
+		if(!this.editaContabil) {
+			this.editaContabil = true;
+		} else {
+			boolean status = false;
+			// pesquisaIdCategoria();
+			this.contabilidade.setIdCategoriaDespesa(this.catDesp.getId());
+			this.contabilidade.setIdStatusContabil(this.statusContabil.getCodContabil());
+
+			System.out.println("Status Contabil: " + this.statusContabil.toString());
+			System.out.println("Contabilidade: " + this.contabilidade.toString());
+
+			status = this.despDao.salvaContabilidadeDAO(this.contabilidade);
+			// dashboardContabil();
+
+			if (this.contabilidade.getId() == null) {
+				Messages.create("SUCESSO!")
+						.detail("Despesa [ " + this.contabilidade.getNome() + " ] registrada com sucesso!").add();
+			} else {
+				Messages.create("SUCESSO!").detail("Despesa [ " + this.contabilidade.getNome() + " ] alterada com sucesso!")
+						.add();
+			}
+		}
+	}
+	
+	/*
+	 * public void pesquisaIdCategoria() { for (CategoriaDespesa cd :
+	 * listCategoriasDesp) { if (cd.getNome().equals(this.catDesp.getNome())) {
+	 * System.out.println("CatDesp atual: " + this.catDesp.toString()); } } }
+	 */
+
+	public void recuperaCategoria() {
+		this.listCategoriasDesp = catDespDao.listaCategoriaDespesa();
 		for (CategoriaDespesa cd : listCategoriasDesp) {
-			if (cd.getNome().equals(this.catDesp.getNome())) {
+			if (this.catDesp.getNome().equals(cd.getNome())) {
 				this.catDesp = cd;
-				// this.contabilidade.setIdCategoriaDespesa(cd.getId());
 				break;
 			}
 		}
 	}
 
-	public void recuperaCategoria() {
-		for (SelectItem si : itemsCatDesp) {
-			if (si.getLabel().equals(this.catDesp.getNome())) {
-				this.editaCatDesp = si;
-				System.out.println("SI Edita Categoria: " + this.editaCatDesp.getLabel());
+	public void recuperaStatusPagamento() {
+		this.listaStatusContabil = statusDao.listaStatusContabil();
+		for (StatusContabil sc : listaStatusContabil) {
+			if (this.statusContabil.getNomeContabil().equals(sc.getNomeContabil())) {
+				this.statusContabil = sc;
+				break;
 			}
 		}
 	}
@@ -107,15 +148,20 @@ public class ContabilidadeMB implements Serializable {
 	 * Pesquisa por ID e atribui à variável catDesp (SelectItem) para exibir em
 	 * componente selectOneMenu
 	 */
-	public void editaContabilidade(Contabilidade c) throws ParseException {
-
-		this.contabilidade = c;
-		this.editaContabil = true;
-
+	public void editaContabilidade() {
+		// this.contabilidade = new Contabilidade();
+		// this.contabilidade = c;
+		listaSelectItem();
+		
 		for (CategoriaDespesa cd : listCategoriasDesp) {
 			if (cd.getId() == this.contabilidade.getIdCategoriaDespesa()) {
 				this.catDesp = cd;
 				// converteDate();
+			}
+		}
+		for (StatusContabil sc : listaStatusContabil) {
+			if (sc.getCodContabil() == this.contabilidade.getIdStatusContabil()) {
+				this.statusContabil = sc;
 			}
 		}
 	}
@@ -147,11 +193,45 @@ public class ContabilidadeMB implements Serializable {
 
 	}
 
-	public void atualizaBanco() throws ParseException {
-		// this.contabilidade.setData(null);
+	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
 		reset();
 		listar();
+	}
+
+	public String formularioContabil(Contabilidade c) {
+		this.contabilidade = new Contabilidade();
+		this.contabilidade = c;
+		this.editaContabil = true;
+		editaContabilidade();
+		return "formulario-despesa";
+	}
+	
+	public String novaDespesa() {
+		atualizaBanco();
+		editaContabilidade();
+		return "formulario-despesa";		
+	}	
+
+	public String dashboardContabil() {
+		System.out.println("Return dashboard contabil");
+		atualizaBanco();
+		return "financeiro";
+	}
+	
+	public void recebeContabil(Contabilidade c) {
+		this.contabilidade = new Contabilidade();
+		this.contabilidade = c;
+	}
+	
+	public void removeContabil() {
+		int id = this.despDao.removeCatDespDAO(this.contabilidade.getId());
+		if (id == 1) {
+			Messages.create("SUCESSO!").warn().detail("Despesa EXCLUÍDA com sucesso!").add();
+		} else {
+			Messages.create("ERRO!").warn().detail("Não foi possível EXCLUIR Despesa").add();
+		}
+		atualizaBanco();
 	}
 
 	public Contabilidade getContabilidade() {
@@ -240,6 +320,38 @@ public class ContabilidadeMB implements Serializable {
 
 	public void setEditaContabil(boolean editaContabil) {
 		this.editaContabil = editaContabil;
+	}
+
+	public StatusContabil getStatusContabil() {
+		return statusContabil;
+	}
+
+	public void setStatusContabil(StatusContabil statusContabil) {
+		this.statusContabil = statusContabil;
+	}
+
+	public StatusContabilDAO getStatusDao() {
+		return statusDao;
+	}
+
+	public void setStatusDao(StatusContabilDAO statusDao) {
+		this.statusDao = statusDao;
+	}
+
+	public List<StatusContabil> getListaStatusContabil() {
+		return listaStatusContabil;
+	}
+
+	public void setListaStatusContabil(List<StatusContabil> listaStatusContabil) {
+		this.listaStatusContabil = listaStatusContabil;
+	}
+
+	public List<SelectItem> getItensStatusContabil() {
+		return itensStatusContabil;
+	}
+
+	public void setItensStatusContabil(List<SelectItem> itensStatusContabil) {
+		this.itensStatusContabil = itensStatusContabil;
 	}
 
 }

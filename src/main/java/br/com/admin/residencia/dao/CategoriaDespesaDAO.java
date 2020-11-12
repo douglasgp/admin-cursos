@@ -50,9 +50,9 @@ public class CategoriaDespesaDAO {
 				stmt = con.prepareStatement("UPDATE categoria_despesa SET nome_categoria=?, desc_categoria=?, sigla_categoria=? WHERE id_categoria=?");
 				stmt.setInt(4, cd.getId());
 			}
-			stmt.setString(1, cd.getNome());
+			stmt.setString(1, cd.getNome().toUpperCase());
 			stmt.setString(2, cd.getDescricao());
-			stmt.setString(3, cd.getSigla());
+			stmt.setString(3, cd.getSigla().toUpperCase());
 			stmt.execute();
 			ConectaBDResidencia.CloseConnection();
 		} catch (SQLException e) {
@@ -83,4 +83,19 @@ public class CategoriaDespesaDAO {
 		}
 		return status;
 	}
+
+	public int pesquisaPorNome(String nome) {
+		int cod = 0;
+		try {
+			Connection con = ConectaBDResidencia.getConResidencia();
+			PreparedStatement stmt = con.prepareStatement("SELECT id_categoria FROM categoria_despesa WHERE nome_categoria ='" + nome +"'");
+			ResultSet id = stmt.executeQuery();
+			cod = id.getInt("id_categoria");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cod;
+	}
+
 }

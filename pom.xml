@@ -239,7 +239,7 @@
 				<configuration>
 					<webResources>
 						<resource>
-							<directory>${build.sourceDirectory}</directory>
+							<directory>${project.build.sourceDirectory}</directory>
 							<targetPath>sources</targetPath>
 						</resource>
 						<resource>
@@ -381,7 +381,7 @@
 									<outputDirectory>src/main/webapp/sources</outputDirectory>
 									<resources>
 										<resource>
-											<directory>${build.sourceDirectory}</directory>
+											<directory>${project.build.sourceDirectory}</directory>
 										</resource>
 									</resources>
 								</configuration>

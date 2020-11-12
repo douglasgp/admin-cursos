@@ -34,6 +34,7 @@ public class DespesaDAO {
 				despesa.setValor(rs.getDouble("valor_total"));
 				despesa.setDescricao(rs.getString("desc_despesa"));
 				despesa.setIdCategoriaDespesa(rs.getInt("id_categoria"));
+				despesa.setIdStatusContabil(rs.getInt("status_pagamento"));
 				despesa.setData(rs.getDate("data_emissao"));
 				listaDespesa.add(despesa);
 			}
@@ -51,19 +52,19 @@ public class DespesaDAO {
 			PreparedStatement stmt;
 			if (cd.getId() == null) {
 				stmt = con.prepareStatement(
-						"INSERT INTO despesa (nome_despesa, valor_total, desc_despesa, id_categoria, data_emissao) VALUES (?,?,?,?,?)");
+						"INSERT INTO despesa (nome_despesa, valor_total, desc_despesa, id_categoria, status_pagamento, data_emissao) VALUES (?,?,?,?,?,?)");
 			} else {
 				stmt = con.prepareStatement(
-						"UPDATE despesa SET nome_despesa=?, valor_total=?, desc_despesa=?, id_categoria=?, data_emissao=? WHERE cod_despesa=?");
-				stmt.setInt(6, cd.getId());
+						"UPDATE despesa SET nome_despesa=?, valor_total=?, desc_despesa=?, id_categoria=?, status_pagamento=?, data_emissao=? WHERE cod_despesa=?");
+				stmt.setInt(7, cd.getId());
 			}
 			String novaData = sdf.format(cd.getData());
-			System.out.println("Data no banco" + novaData);
 			stmt.setString(1, cd.getNome());
 			stmt.setDouble(2, cd.getValor());
 			stmt.setString(3, cd.getDescricao());
 			stmt.setInt(4, cd.getIdCategoriaDespesa());
-			stmt.setString(5, novaData);
+			stmt.setInt(5, cd.getIdStatusContabil());
+			stmt.setString(6, novaData);
 			// stmt.setDate(5, (Date) new java.util.Date(new Date(0).getTime()));
 			stmt.execute();
 			status = true;
@@ -87,12 +88,12 @@ public class DespesaDAO {
 		}
 	}
 
-	public int removeCatDespDAO(Integer codCat) {
+	public int removeCatDespDAO(Integer codDespesa) {
 		int status = 0;
 		try {
 			Connection con = ConectaBDResidencia.getConResidencia();
 			PreparedStatement stmt = con
-					.prepareStatement("DELETE FROM categoria_despesa WHERE id_categoria = " + codCat);
+					.prepareStatement("DELETE FROM despesa WHERE cod_despesa = " + codDespesa);
 			status = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

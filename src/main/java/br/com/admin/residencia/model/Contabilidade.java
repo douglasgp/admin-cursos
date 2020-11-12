@@ -10,7 +10,7 @@ public class Contabilidade {
 	private String descricao;
 	private Integer idCategoriaDespesa;
 	private Date data;
-	private StatusContabil statusContabil;
+	private Integer idStatusContabil;
 
 	public Date getData() {
 		return data;
@@ -64,16 +64,19 @@ public class Contabilidade {
 		this.idCategoriaDespesa = idCategoriaDespesa;
 	}
 
-	public StatusContabil getStatusContabil() {
-		return statusContabil;
+	public Integer getIdStatusContabil() {
+		return idStatusContabil;
 	}
 
-	public void setStatusContabil(StatusContabil statusContabil) {
-		this.statusContabil = statusContabil;
+
+	public void setIdStatusContabil(Integer idStatusContabil) {
+		this.idStatusContabil = idStatusContabil;
 	}
+
 
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
@@ -81,13 +84,14 @@ public class Contabilidade {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idCategoriaDespesa == null) ? 0 : idCategoriaDespesa.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((statusContabil == null) ? 0 : statusContabil.hashCode());
+		result = prime * result + ((idStatusContabil == null) ? 0 : idStatusContabil.hashCode());
 		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -120,10 +124,10 @@ public class Contabilidade {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
-		if (statusContabil == null) {
-			if (other.statusContabil != null)
+		if (idStatusContabil == null) {
+			if (other.idStatusContabil != null)
 				return false;
-		} else if (!statusContabil.equals(other.statusContabil))
+		} else if (!idStatusContabil.equals(other.idStatusContabil))
 			return false;
 		if (valor == null) {
 			if (other.valor != null)
@@ -133,12 +137,12 @@ public class Contabilidade {
 		return true;
 	}
 
-	
 	@Override
 	public String toString() {
+
 		return "Contabilidade [id=" + id + ", nome=" + nome + ", valor=" + valor + ", descricao=" + descricao
-				+ ", idCategoriaDespesa=" + idCategoriaDespesa + ", data=" + data + ", statusContabil=" + statusContabil
-				+ "]";
+				+ ", idCategoriaDespesa=" + idCategoriaDespesa + ", data=" + data + ", statusContabil="
+				+ idStatusContabil + "]";
 	}
 
 }
