@@ -10,14 +10,15 @@
     </h1>
 </section>
 <p:spacer height="15px"/>
+
 <div class="row">
 <div class="col-md-3 col-sm-6 col-xs-12">
     <div class="info-box">
 
         <span class="info-box-icon bg-aqua">
-        	<a href="#">
-        		<i class="fa fa-motorcycle"></i>
-        	</a>
+        	<p:link outcome="/pages/dashboard/combustivel-dashboard">
+        		<i class="fa fa-motorcycle"></i>        	
+        	</p:link>
         </span>
 
         <div class="info-box-content">
@@ -31,7 +32,9 @@
 <!-- /.col -->
 <div class="col-md-3 col-sm-6 col-xs-12">
     <div class="info-box">
-        <span class="info-box-icon bg-red"><i class="fa fa-stack-overflow"></i></span>
+        <span class="info-box-icon bg-red">
+        	<i class="fa fa-stack-overflow"></i>
+        </span>
 
         <div class="info-box-content">
             <span class="info-box-text">Freelance</span>
@@ -73,7 +76,7 @@
 </div>
 <!-- /.col -->
 </div>
-        <!-- /.row -->
+<!-- /.row -->
 
 <div class="row">
 <div class="col-md-12">
@@ -206,6 +209,7 @@
 </div>
 <!-- /.col -->
 </div>
+
 <h:form>
 
 	<p:growl showDetail="true" life="2000" severity="info">
@@ -218,6 +222,11 @@
 	<p:panel id="pnlListaDesp" header="Lista de Despesas"
 			style="margin-bottom:20px" styleClass="box-teal box-solid">
 			<p:toolbar>
+				<p:toolbarGroup align="left">
+						<p:commandButton value="Atualizar" icon="fa fa-refresh" styleClass="btn-info" 
+							title="Nova despesa" action="#{contabilidadeMB.atualizaBanco()}">
+						</p:commandButton>
+					</p:toolbarGroup>
 				<p:toolbarGroup align="right">
 					<p:commandButton value="Nova" icon="fa fa-file-text-o" styleClass="btn-primary"
 						title="Nova despesa" action="#{contabilidadeMB.novaDespesa()}">
@@ -252,56 +261,38 @@
 					<p:commandButton value="Excluir" class="btn btn-danger btn-sm"
 						update="@(div[id$=formDelDespesa])"
 						onclick="PF('modalDelDespesa').show()"
-						action="#{contabilidadeMB.editaContabilidade(d)}" />
+						action="#{contabilidadeMB.recebeContabil(d)}" />
 
 					<!-- MODAL remove despesa -->
 					<p:dialog header="Nova Despesa" widgetVar="modalDelDespesa"
-						position="center" responsive="true" modal="true"
-						appendTo="@(body)" width="500px"
-						styleClass="card box-primary box-solid">
+						position="center" responsive="false" modal="true"
+						appendTo="@(body)" width="400px"
+						styleClass="card box-danger box-solid">
 						<p:panel id="formDelDespesa">
-							<p:panelGrid columns="3" id="pnlDelDespesa" layout="grid">
-								<h:panelGroup>
-									<div class="p-field p-col-1 p-md-3">
+								<p:panelGrid columns="2" id="pnlDelDespesa" layout="grid">
 										<p:outputLabel value="Cod. Contabil: " />
 										<p:outputLabel id="idContabilDel"
 											value="#{contabilidadeMB.contabilidade.id}" />
-									</div>
-								</h:panelGroup>
-								<p:spacer width="20px" />
-								<h:panelGroup>
-									<div class="p-field p-col-1 p-md-3">
 										<p:outputLabel value="Título da despesa: " />
 										<p:outputLabel id="nomeContabilDel"
 											value="#{contabilidadeMB.contabilidade.nome}" />
-									</div>
-								</h:panelGroup>
-
-								<h:panelGroup>
-									<div class="p-field p-col-1 p-md-3">
 										<p:outputLabel value="Valor: " />
 										<p:outputLabel id="valorContabilDel"
 											value="#{contabilidadeMB.contabilidade.valor}" />
-									</div>
-								</h:panelGroup>
-
-								<h:panelGroup>
-									<div class="p-field p-col-1 p-md-3">
 										<p:outputLabel value="Data: " />
 										<p:outputLabel id="dataContabilDel"
 											value="#{contabilidadeMB.contabilidade.data}" />
-									</div>
+								</p:panelGrid>
+								<p:spacer height="20px" />
+								<!-- BOTÕES -->
+								<h:panelGroup>
+									<p:commandButton value="Excluir" class="btn btn-danger"
+										onclick="PF('modalDelDespesa').hide()" update="@form"
+										action="#{contabilidadeMB.removeContabil()}" />
+									<p:commandButton value="Cancelar" class="btn btn-warning"
+										onclick="PF('modalDelDespesa').hide()" />
 								</h:panelGroup>
-							</p:panelGrid>
-							<p:spacer width="20px" />
-							<!-- BOTÕES -->
-							<h:panelGroup>
-								<p:commandButton value="Salvar" class="btn btn-primary"
-									onclick="PF('modalDelDespesa').hide()" update="@form" />
-								<p:commandButton value="Cancelar" class="btn btn-warning"
-									onclick="PF('modalDelDespesa').hide()" />
-							</h:panelGroup>
-						</p:panel>
+							</p:panel>
 					</p:dialog>
 
 				</p:column>

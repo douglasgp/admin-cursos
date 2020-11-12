@@ -88,12 +88,12 @@ public class DespesaDAO {
 		}
 	}
 
-	public int removeCatDespDAO(Integer codCat) {
+	public int removeCatDespDAO(Integer codDespesa) {
 		int status = 0;
 		try {
 			Connection con = ConectaBDResidencia.getConResidencia();
 			PreparedStatement stmt = con
-					.prepareStatement("DELETE FROM categoria_despesa WHERE id_categoria = " + codCat);
+					.prepareStatement("DELETE FROM despesa WHERE cod_despesa = " + codDespesa);
 			status = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

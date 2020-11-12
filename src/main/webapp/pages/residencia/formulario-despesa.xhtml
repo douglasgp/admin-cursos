@@ -78,18 +78,21 @@
 				<p:panelGrid layout="grid" columns="2" styleClass="ui-fluid p-formgrid p-grid">
 				
 					<h:panelGroup>
-						<h:panelGrid columns="5">	
-							<h:panelGroup>
-								<div class="p-field p-col-2 p-md-3">
-									<p:outputLabel value="Cod. Categoria" />
-									<p:inputText disabled="true" value="#{contabilidadeMB.contabilidade.id}"/>
-								</div>
-							</h:panelGroup>
-							<p:spacer width="20px"/>							
+						<h:panelGroup>
+							<div class="p-field p-col-2 p-md-3">
+								<p:outputLabel value="Cod. Categoria" />
+								<p:inputText disabled="true" value="#{contabilidadeMB.contabilidade.id}"/>
+							</div>
+						</h:panelGroup>
+
+						<p:spacer width="20px"/>
+
+						<h:panelGrid columns="5">
 							<h:panelGroup>
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Nome da despesa" />
-									<p:inputText value="#{contabilidadeMB.contabilidade.nome}"/>
+									<p:inputText value="#{contabilidadeMB.contabilidade.nome}" required="true"
+										requiredMessage="Informe um título da despesa"/>
 								</div>
 							</h:panelGroup>
 							<p:spacer width="20px" />					
@@ -97,7 +100,8 @@
 								<div class="p-field p-col-4 p-md-3">
 									<p:outputLabel value="Valor da despesa" />
 									<p:inputText value="#{contabilidadeMB.contabilidade.valor}"
-										placeholder="Informe apenas números com ponto" />
+										placeholder="Informe apenas números com ponto" required="true"
+										requiredMessage="Informe um valor válido!"/>
 								</div>
 							</h:panelGroup>
 							<p:spacer width="20px" />					
@@ -129,7 +133,8 @@
 							<h:panelGroup>
 								<p:outputLabel value="Data" />
 								<p:datePicker id="button" pattern="yyyy-MM-dd" showIcon="true"
-									value="#{contabilidadeMB.contabilidade.data}"/>
+									value="#{contabilidadeMB.contabilidade.data}" required="true"
+									requiredMessage="Informe uma data"/>
 							</h:panelGroup>
 							<p:spacer width="20px"/>
 							<h:panelGroup>
@@ -145,14 +150,15 @@
 					<h:panelGroup>
 						<h:panelGrid columns="3">
 							<p:commandButton value="Salvar" class="btn btn-primary"
-								icon="fa fa-plus-square-o" iconPos="right"
+								icon="fa fa-plus-square-o" iconPos="left" 
 								action="#{contabilidadeMB.salvaContabilidade()}" >
 								<!-- <p:ajax listener="#{contabilidadeMB.salvaContabilidade()}" /> -->
 							</p:commandButton>
 							<p:spacer width="20px"/>
-							<p:commandButton value="Voltar" class="btn btn-warning" 
+							<p:button value="Voltar" class="btn btn-warning" rendered="#{contabilidadeMB.contabilidade.id == null}"
+								icon="fa fa-arrow-left" outcome="financeiro"/>
+							<p:commandButton value="Voltar" class="btn btn-warning" rendered="#{contabilidadeMB.contabilidade.id != null}"
 								icon="fa fa-arrow-left" action="#{contabilidadeMB.dashboardContabil()}">
-								<p:ajax listener="#{contabilidadeMB.reset()}"/>
 							</p:commandButton>
 						</h:panelGrid>
 					</h:panelGroup>	

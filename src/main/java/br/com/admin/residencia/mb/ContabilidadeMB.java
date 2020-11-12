@@ -129,7 +129,6 @@ public class ContabilidadeMB implements Serializable {
 		for (CategoriaDespesa cd : listCategoriasDesp) {
 			if (this.catDesp.getNome().equals(cd.getNome())) {
 				this.catDesp = cd;
-				System.out.println("get Categoria: " + this.catDesp.toString());
 				break;
 			}
 		}
@@ -140,7 +139,6 @@ public class ContabilidadeMB implements Serializable {
 		for (StatusContabil sc : listaStatusContabil) {
 			if (this.statusContabil.getNomeContabil().equals(sc.getNomeContabil())) {
 				this.statusContabil = sc;
-				System.out.println("get Status: " + this.statusContabil.toString());
 				break;
 			}
 		}
@@ -197,8 +195,8 @@ public class ContabilidadeMB implements Serializable {
 
 	public void atualizaBanco() {
 		FabricaConexao.CloseConnection();
-		this.listaContabilidade = despDao.listaDespesa();
 		reset();
+		listar();
 	}
 
 	public String formularioContabil(Contabilidade c) {
@@ -210,8 +208,7 @@ public class ContabilidadeMB implements Serializable {
 	}
 	
 	public String novaDespesa() {
-		this.contabilidade = new Contabilidade();
-		this.editaContabil = false;
+		atualizaBanco();
 		editaContabilidade();
 		return "formulario-despesa";		
 	}	
@@ -222,8 +219,19 @@ public class ContabilidadeMB implements Serializable {
 		return "financeiro";
 	}
 	
-	public void removeDespesa(Contabilidade c) {
-		
+	public void recebeContabil(Contabilidade c) {
+		this.contabilidade = new Contabilidade();
+		this.contabilidade = c;
+	}
+	
+	public void removeContabil() {
+		int id = this.despDao.removeCatDespDAO(this.contabilidade.getId());
+		if (id == 1) {
+			Messages.create("SUCESSO!").warn().detail("Despesa EXCLUÍDA com sucesso!").add();
+		} else {
+			Messages.create("ERRO!").warn().detail("Não foi possível EXCLUIR Despesa").add();
+		}
+		atualizaBanco();
 	}
 
 	public Contabilidade getContabilidade() {
